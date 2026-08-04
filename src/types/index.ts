@@ -1,5 +1,6 @@
 export type CategoryId = 
   | 'java-core'
+  | 'java-17'
   | 'spring-boot'
   | 'microservices-security'
   | 'sql-database'

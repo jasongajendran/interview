@@ -1,6 +1,8 @@
 import { QuestionItem, CategoryId } from '../types';
 import { javaCoreQuestions } from './javaCore';
+import { java17Questions } from './java17';
 import { springBootQuestions } from './springBoot';
+import { hibernateJpaQuestions } from './hibernateJpa';
 import { sqlDatabaseQuestions } from './sqlDatabase';
 import { legacyWebQuestions } from './legacyWeb';
 import { devopsCiCdQuestions } from './devopsCiCd';
@@ -30,6 +32,14 @@ export const CATEGORIES_META: CategoryMeta[] = [
     iconName: 'Code2'
   },
   {
+    id: 'java-17',
+    name: 'Java 8 to 17 Features',
+    shortName: 'Java 17+',
+    description: 'Records, Pattern Matching, Sealed Classes, Text Blocks, Switch Expressions',
+    badge: 'Java 14-17',
+    iconName: 'Layers'
+  },
+  {
     id: 'spring-boot',
     name: 'Spring Boot 3.x & Spring 6',
     shortName: 'Spring Boot',
@@ -47,10 +57,10 @@ export const CATEGORIES_META: CategoryMeta[] = [
   },
   {
     id: 'sql-database',
-    name: 'SQL, Database & Query Tuning',
-    shortName: 'SQL & DB',
-    description: 'Window Functions, EXPLAIN ANALYZE, B-Tree Indexes, Deadlocks, ACID, Isolation Levels',
-    badge: 'PostgreSQL/Oracle',
+    name: 'SQL, Database, JPA & Hibernate',
+    shortName: 'SQL & JPA',
+    description: 'N+1 Problem, Dirty Checking, Window Functions, B-Tree Indexes, ACID',
+    badge: 'PostgreSQL/JPA',
     iconName: 'Database'
   },
   {
@@ -113,7 +123,9 @@ export const CATEGORIES_META: CategoryMeta[] = [
 
 export const allQuestions: QuestionItem[] = [
   ...javaCoreQuestions,
+  ...java17Questions,
   ...springBootQuestions,
+  ...hibernateJpaQuestions,
   ...microservicesSecurityQuestions,
   ...sqlDatabaseQuestions,
   ...testingFrameworkQuestions,
@@ -125,7 +137,9 @@ export const allQuestions: QuestionItem[] = [
 
 export {
   javaCoreQuestions,
+  java17Questions,
   springBootQuestions,
+  hibernateJpaQuestions,
   microservicesSecurityQuestions,
   sqlDatabaseQuestions,
   testingFrameworkQuestions,

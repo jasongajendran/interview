@@ -36,8 +36,8 @@ export function Navigation({
           <BookOpen className="w-5 h-5" />
         </div>
         <div>
-          <h1 className="text-white font-bold text-lg leading-tight">Java Mastery</h1>
-          <p className="text-xs text-slate-400">Interview Prep</p>
+          <h1 className="text-white font-bold text-lg leading-tight">Java Prep</h1>
+          <p className="text-xs text-slate-400">Interview Guide</p>
         </div>
       </div>
 
@@ -99,7 +99,7 @@ export function Navigation({
              <div className="bg-blue-600 p-1.5 rounded-md text-white">
                 <BookOpen className="w-4 h-4" />
              </div>
-             <span className="text-white font-bold">Java Mastery</span>
+             <span className="text-white font-bold">Java Prep</span>
           </div>
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
