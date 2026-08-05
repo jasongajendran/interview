@@ -4,9 +4,9 @@ import { CATEGORIES_META } from '../data';
 import { CategoryId } from '../types';
 
 interface NavigationProps {
-  currentView: 'home' | 'category' | 'scenarios' | 'diagnostics';
+  currentView: 'home' | 'category' | 'scenarios' | 'diagnostics' | 'visuals';
   currentCategory?: CategoryId;
-  onNavigate: (view: 'home' | 'category' | 'scenarios' | 'diagnostics', categoryId?: CategoryId) => void;
+  onNavigate: (view: 'home' | 'category' | 'scenarios' | 'diagnostics' | 'visuals', categoryId?: CategoryId) => void;
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (isOpen: boolean) => void;
 }

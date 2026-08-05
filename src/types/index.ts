@@ -9,10 +9,11 @@ export type CategoryId =
   | 'legacy-web'
   | 'jboss-wildfly'
   | 'ui-frontend'
+  | 'aws-cloud'
   | 'ides-diagnostics'
   | 'production-scenarios';
 
-export type SeniorityLevel = 'Senior (10-12 YOE)' | 'Lead / Architect (13-15+ YOE)' | 'Principal / Staff';
+export type SeniorityLevel = 'Mid-Level (4-6 YOE)' | 'Senior (10-12 YOE)' | 'Lead / Architect (13-15+ YOE)' | 'Principal / Staff';
 
 export interface CodeExample {
   title: string;
@@ -36,11 +37,11 @@ export interface QuestionItem {
   topic: string;
   title: string;
   seniority: SeniorityLevel;
-  difficulty: 'Medium' | 'Hard' | 'Architect-Level';
+  difficulty: 'Easy' | 'Medium' | 'Hard' | 'Architect-Level';
   summary: string;
   coreConcepts: string[];
-  detailedExplanation: string[];
-  codeExamples: CodeExample[];
+  detailedExplanation?: string[];
+  codeExamples?: CodeExample[];
   rubric: InterviewerRubric;
   tags: string[];
 }

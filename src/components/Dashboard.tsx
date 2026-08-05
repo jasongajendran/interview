@@ -1,13 +1,13 @@
 import { CATEGORIES_META } from '../data';
 import { CategoryId } from '../types';
-import { BookOpen, AlertTriangle, Terminal, Code2, Boxes, ShieldCheck, Database, CheckCircle2, GitBranch, Layers, Server, Layout } from 'lucide-react';
+import { BookOpen, AlertTriangle, Terminal, Code2, Boxes, ShieldCheck, Database, CheckCircle2, GitBranch, Layers, Server, Layout, Cloud } from 'lucide-react';
 
 interface DashboardProps {
   onNavigate: (view: 'home' | 'category' | 'scenarios' | 'diagnostics', categoryId?: CategoryId) => void;
 }
 
 const ICONS: Record<string, any> = {
-  Code2, Boxes, ShieldCheck, Database, CheckCircle2, GitBranch, Layers, Server, Layout, Terminal, AlertTriangle
+  Code2, Boxes, ShieldCheck, Database, CheckCircle2, GitBranch, Layers, Server, Layout, Terminal, AlertTriangle, Cloud
 };
 
 export function Dashboard({ onNavigate }: DashboardProps) {

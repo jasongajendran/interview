@@ -12,6 +12,7 @@ import { uiFrontendQuestions } from './uiFrontend';
 import { microservicesSecurityQuestions } from './microservicesSecurity';
 import { productionScenarios } from './productionScenarios';
 import { diagnosticTools } from './idesDiagnostics';
+import { awsCloudQuestions } from './awsCloud';
 
 export interface CategoryMeta {
   id: CategoryId;
@@ -102,6 +103,14 @@ export const CATEGORIES_META: CategoryMeta[] = [
     description: 'XSS vs CSRF, CSP headers, DOM security, Responsive design, SPA vs SSR, SameSite cookies',
     badge: 'Web Frontends',
     iconName: 'Layout'
+  },
+  {
+    id: 'aws-cloud',
+    name: 'AWS Cloud & Serverless',
+    shortName: 'AWS Cloud',
+    description: 'EC2, S3, RDS, DynamoDB, Fargate, Lambda, ALB/NLB, Route 53',
+    badge: 'Cloud',
+    iconName: 'Cloud'
   }
 ];
 
@@ -116,7 +125,8 @@ export const allQuestions: QuestionItem[] = [
   ...devopsCiCdQuestions,
   ...legacyWebQuestions,
   ...jbossWildflyQuestions,
-  ...uiFrontendQuestions
+  ...uiFrontendQuestions,
+  ...awsCloudQuestions
 ];
 
 export {
@@ -131,6 +141,7 @@ export {
   legacyWebQuestions,
   jbossWildflyQuestions,
   uiFrontendQuestions,
+  awsCloudQuestions,
   productionScenarios,
   diagnosticTools
 };
