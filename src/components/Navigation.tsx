@@ -22,6 +22,7 @@ export function Navigation({
     { id: 'home', label: 'Dashboard', icon: Home },
     { id: 'scenarios', label: 'Production Incidents', icon: AlertTriangle },
     { id: 'diagnostics', label: 'Diagnostic Tools', icon: Terminal },
+    { id: 'visuals', label: 'Visual Concepts', icon: BookOpen },
   ];
 
   const handleNav = (view: any, catId?: any) => {

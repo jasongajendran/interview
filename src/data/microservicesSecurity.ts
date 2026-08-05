@@ -179,5 +179,85 @@ public class SecurityConfig {
       ]
     },
     tags: ['Security', 'OAuth2', 'JWT', 'Spring Security', 'OpenID Connect']
+  },
+  {
+    id: 'ms-02',
+    category: 'microservices-security',
+    categoryName: 'Microservices & Enterprise Security',
+    topic: 'Resiliency & Fault Tolerance',
+    title: 'Circuit Breaker Pattern (Resilience4j) & Bulkheads',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Protecting microservices from cascading failures using Circuit Breakers, Retry mechanisms, and Bulkheads with Resilience4j.',
+    coreConcepts: [
+      'Circuit Breaker Pattern: Prevents a service from making calls to a downstream service that is likely to fail, giving the failing service time to recover.',
+      'States: CLOSED (normal, calls go through), OPEN (calls blocked, fail fast), HALF_OPEN (probing to see if downstream is healthy).',
+      'Fallback Method: A default response provided when the circuit is open or a call fails, ensuring graceful degradation.',
+      'Bulkhead Pattern: Isolates resources (thread pools/semaphores) for different downstream calls so that one slow downstream service doesn\'t exhaust the entire service\'s threads.'
+    ],
+    detailedExplanation: [
+      'In a microservice architecture, a slow dependency is often worse than a dead one. If Service A calls a slow Service B, Service A\'s threads will block, eventually causing Service A to crash and cascading the failure upstream.',
+      'The Circuit Breaker tracks failure rates and slow call rates. Once a threshold is breached, it trips OPEN, immediately rejecting new calls and returning fallbacks.',
+      'Resilience4j has largely replaced Netflix Hystrix as the modern standard for Spring Boot 2/3 applications.'
+    ],
+    codeExamples: [
+      {
+        title: 'Spring Boot 3 + Resilience4j Circuit Breaker',
+        language: 'java',
+        code: `import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
+import org.springframework.stereotype.Service;
+
+@Service
+public class InventoryClient {
+
+    private final RestTemplate restTemplate;
+
+    public InventoryClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    // Wrap call with Circuit Breaker and Retry
+    @CircuitBreaker(name = "inventoryService", fallbackMethod = "fallbackInventory")
+    @Retry(name = "inventoryService")
+    public InventoryResponse getInventory(String productId) {
+        return restTemplate.getForObject("http://inventory-service/api/inventory/" + productId, 
+                                          InventoryResponse.class);
+    }
+
+    // Fallback must have same signature plus the Exception parameter
+    public InventoryResponse fallbackInventory(String productId, Throwable throwable) {
+        // Log the error concisely
+        System.err.println("Inventory service failed. Serving cached/default data. Reason: " + throwable.getMessage());
+        
+        // Return default/cached response for graceful degradation
+        return new InventoryResponse(productId, 0, false);
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains the three states of a Circuit Breaker (Closed, Open, Half-Open).',
+        'Identifies the problem it solves (cascading failures, thread pool exhaustion due to slow downstream services).',
+        'Understands how to implement a graceful fallback method.',
+        'Mentions modern tools like Resilience4j over deprecated Netflix Hystrix.'
+      ],
+      juniorOrMidRedFlags: [
+        'Thinks Circuit Breaker restarts the application.',
+        'Implements retry without exponential backoff or without a limit, risking a DDoS on the downstream service.',
+        'Does not know how a Circuit Breaker transitions from Open back to Closed (via Half-Open probes).'
+      ],
+      seniorDifferentiators: [
+        'Explains the difference between a time-based sliding window and count-based sliding window for calculating failure rates.',
+        'Discusses the combination of Bulkheads (thread pool isolation) with Circuit Breakers.',
+        'Discusses ignoring certain client exceptions (like 404 Not Found) so they don\'t count towards the failure rate threshold.'
+      ],
+      followUpQuestions: [
+        'If a downstream service returns a 400 Bad Request, should that count as a failure that trips the Circuit Breaker?',
+        'How does the Half-Open state work?'
+      ]
+    },
+    tags: ['Resilience', 'Circuit Breaker', 'Microservices', 'Resilience4j', 'Fault Tolerance']
   }
 ];

@@ -9,15 +9,16 @@ import { Dashboard } from './components/Dashboard';
 import { CategoryView } from './components/CategoryView';
 import { ScenariosView } from './components/ScenariosView';
 import { DiagnosticsView } from './components/DiagnosticsView';
+import { VisualsView } from './components/VisualsView';
 import { CategoryId } from './types';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'category' | 'scenarios' | 'diagnostics'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'category' | 'scenarios' | 'diagnostics' | 'visuals'>('home');
   const [currentCategory, setCurrentCategory] = useState<CategoryId | undefined>();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleNavigate = (view: 'home' | 'category' | 'scenarios' | 'diagnostics', categoryId?: CategoryId) => {
+  const handleNavigate = (view: 'home' | 'category' | 'scenarios' | 'diagnostics' | 'visuals', categoryId?: CategoryId) => {
     setCurrentView(view);
     setCurrentCategory(categoryId);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -43,10 +44,11 @@ export default function App() {
             transition={{ duration: 0.2 }}
             className="h-full"
           >
-            {currentView === 'home' && <Dashboard onNavigate={handleNavigate} />}
+            {currentView === 'home' && <Dashboard onNavigate={handleNavigate as any} />}
             {currentView === 'category' && currentCategory && <CategoryView categoryId={currentCategory} />}
             {currentView === 'scenarios' && <ScenariosView />}
             {currentView === 'diagnostics' && <DiagnosticsView />}
+            {currentView === 'visuals' && <VisualsView />}
           </motion.div>
         </AnimatePresence>
       </main>

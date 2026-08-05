@@ -1012,5 +1012,414 @@ Supplied List: [Dynamic Element]`
       ]
     },
     tags: ['Method References', 'Lambdas', 'Functional Interfaces']
+  },
+  {
+    id: 'java-13',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Exception Handling',
+    title: 'Checked vs Unchecked Exceptions & Anti-Patterns',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'The difference between Checked (compile-time) and Unchecked (runtime) exceptions, and modern best practices.',
+    coreConcepts: [
+      'Checked Exceptions (extend Exception) must be declared in the method signature or caught. They represent recoverable conditions (e.g. FileNotFoundException).',
+      'Unchecked Exceptions (extend RuntimeException) do not need to be declared. They represent programming errors or unrecoverable states (e.g. NullPointerException).',
+      'Modern frameworks (like Spring) wrap most checked exceptions into unchecked ones because checked exceptions break functional pipelines (lambdas).'
+    ],
+    detailedExplanation: [
+      'Historically, Java encouraged Checked Exceptions to force developers to handle errors. However, this often led to empty catch blocks or throws Exception clutter.',
+      'In modern Java, especially with the Stream API, checked exceptions are cumbersome because standard functional interfaces (like Function or Consumer) do not throw checked exceptions.'
+    ],
+    codeExamples: [
+      {
+        title: 'Exception Hierarchy and Wrapping',
+        language: 'java',
+        code: `import java.io.*;
+
+public class ExceptionDemo {
+    // 1. Checked Exception: Must be declared
+    public void readFile() throws IOException {
+        FileReader reader = new FileReader("test.txt");
+        reader.close();
+    }
+
+    // 2. Unchecked Exception: No declaration needed
+    public void validate(String input) {
+        if (input == null) {
+            throw new IllegalArgumentException("Input cannot be null");
+        }
+    }
+
+    // 3. Wrapping checked into unchecked for Streams
+    public void modernWrap() {
+        try {
+            readFile();
+        } catch (IOException e) {
+            // Translating to a RuntimeException (Anti-pattern fix)
+            throw new UncheckedIOException(e);
+        }
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Clearly defines Checked (compile-time forced handling) vs Unchecked (RuntimeException).',
+        'Explains why modern Java (Spring, Hibernate, Streams) prefers RuntimeExceptions.',
+        'Demonstrates wrapping a Checked Exception into a RuntimeException.'
+      ],
+      juniorOrMidRedFlags: [
+        'Catching an exception and doing nothing (swallowing it).',
+        'Catching Exception or Throwable globally instead of specific exceptions.'
+      ],
+      seniorDifferentiators: [
+        'Explains how checked exceptions conflict with the Open-Closed Principle (changing a low-level method signature forces changes all the way up the call stack).'
+      ],
+      followUpQuestions: [
+        'How do you handle checked exceptions inside a Java 8 Stream `.map()` operation?'
+      ]
+    },
+    tags: ['Exceptions', 'Error Handling', 'Best Practices']
+  },
+  {
+    id: 'java-14',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Resource Management',
+    title: 'Try-With-Resources and the AutoCloseable Interface (Java 7/9)',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Ensuring resource safety without memory leaks, handling suppressed exceptions, and implementing AutoCloseable.',
+    coreConcepts: [
+      'Try-with-resources (introduced in Java 7) guarantees that resources are closed automatically at the end of the statement.',
+      'To be used in a try-with-resources block, an object must implement java.lang.AutoCloseable or java.io.Closeable.',
+      'It properly handles "Suppressed Exceptions" where an exception in the try block masks an exception during the close() method.'
+    ],
+    detailedExplanation: [
+      'Before Java 7, resources (JDBC Connections, File streams) had to be closed in a finally block. This was verbose and prone to error, especially when close() itself could throw an exception.',
+      'Java 9 enhanced this by allowing effectively final variables to be used directly in the try-with-resources statement.'
+    ],
+    codeExamples: [
+      {
+        title: 'Legacy finally block vs Try-With-Resources',
+        language: 'java',
+        code: `import java.sql.*;
+
+public class ResourceDemo {
+    // OLD WAY (Java 6) - Verbose and prone to masking exceptions
+    public void oldWay(String url) throws SQLException {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url);
+            // Execute query
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    // Log error
+                }
+            }
+        }
+    }
+
+    // NEW WAY (Java 7+) - Clean and handles suppressed exceptions
+    public void newWay(String url) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement ps = conn.prepareStatement("SELECT 1")) {
+            
+            ResultSet rs = ps.executeQuery();
+            // Process ResultSet
+            
+        } // Both ps and conn are automatically closed here in reverse order!
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains the syntax and purpose of try-with-resources.',
+        'Mentions the AutoCloseable interface requirement.',
+        'Explains that resources are closed in reverse order of declaration.'
+      ],
+      juniorOrMidRedFlags: [
+        'Still writes explicit finally blocks to close standard I/O streams in modern Java.',
+        'Unaware of what interface allows a class to be used in try-with-resources.'
+      ],
+      seniorDifferentiators: [
+        'Explains Suppressed Exceptions (when both the try block and the close() method throw, the close exception is added to the main exception\'s suppressed list).'
+      ],
+      followUpQuestions: [
+        'Can a try-with-resources block also have catch and finally blocks? When do they execute?'
+      ]
+    },
+    tags: ['Try-With-Resources', 'AutoCloseable', 'Memory Leaks']
+  },
+  {
+    id: 'java-15',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Generics',
+    title: 'Generics, Type Erasure, and Wildcards (? extends T)',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Understanding how Generics work at compile time, the concept of Type Erasure, and PECS (Producer Extends, Consumer Super).',
+    coreConcepts: [
+      'Generics provide compile-time type safety. A List<String> is verified by the compiler to only contain Strings.',
+      'Type Erasure: At runtime, the JVM does not know about generic types. List<String> simply becomes List (raw type) containing Objects.',
+      'PECS Rule: "Producer Extends, Consumer Super". Use `? extends T` if you only read from the collection. Use `? super T` if you only write to it.'
+    ],
+    detailedExplanation: [
+      'Type Erasure was introduced in Java 5 for backward compatibility with older bytecode. Because of erasure, you cannot do things like `new T()` or `if (obj instanceof List<String>)` at runtime.',
+      'Wildcards provide flexibility for APIs. For example, `List<Dog>` is NOT a subclass of `List<Animal>`, even though `Dog` extends `Animal`. To write a method that accepts a list of any animals, you must use `List<? extends Animal>`.',
+      'However, you cannot add a new Dog to a `List<? extends Animal>` because the compiler doesn\'t know what specific type of Animal list was passed (it could be a `List<Cat>`).'
+    ],
+    codeExamples: [
+      {
+        title: 'Generics and the PECS Principle',
+        language: 'java',
+        code: `class Animal {}
+class Dog extends Animal {}
+class Cat extends Animal {}
+
+public class GenericsDemo {
+
+    // PRODUCER EXTENDS: We only READ from this list
+    public void printAnimals(List<? extends Animal> animals) {
+        for (Animal a : animals) {
+            System.out.println(a);
+        }
+        // animals.add(new Dog()); // COMPILER ERROR! Might be a List<Cat>
+    }
+
+    // CONSUMER SUPER: We only WRITE to this list
+    public void addDogs(List<? super Dog> dogs) {
+        dogs.add(new Dog());
+        dogs.add(new Dog());
+        
+        // Animal a = dogs.get(0); // COMPILER ERROR! Returns Object, not guaranteed to be Animal
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains that generics are a compile-time feature and are erased at runtime.',
+        'Mentions the inability to use instanceof or instantiate type parameters due to erasure.',
+        'Explains the difference between ? extends T and ? super T.',
+        'References the PECS rule (Producer Extends, Consumer Super).'
+      ],
+      juniorOrMidRedFlags: [
+        'Believes List<Dog> is a subclass of List<Animal>.',
+        'Thinks generic type information is fully available at runtime (like in C#).',
+        'Struggles to explain why you cannot add items to a `? extends T` collection.'
+      ],
+      seniorDifferentiators: [
+        'Discusses how Spring and Jackson bypass type erasure limitations using ParameterizedTypeReference or TypeReference (which capture generic information in an anonymous subclass).',
+        'Explains bridge methods generated by the compiler to maintain polymorphism with type erasure.'
+      ],
+      followUpQuestions: [
+        'If generic types are erased at runtime, how does Jackson (JSON library) deserialize a generic `List<User>` accurately without turning them into `LinkedHashMap`s?',
+        'What is a bridge method in Java?'
+      ]
+    },
+    tags: ['Generics', 'Type Erasure', 'PECS', 'Core Java']
+  },
+  {
+    id: 'java-16',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Core API',
+    title: 'The Contract Between equals() and hashCode()',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Understanding why and how to override equals and hashCode correctly, and what happens if you break the contract.',
+    coreConcepts: [
+      'If two objects are equal according to the equals(Object) method, they must have the same hashCode().',
+      'If two objects have the same hashCode(), they are not necessarily equal (this is a hash collision).',
+      'Breaking this contract causes objects to be lost or unretrievable when placed in hash-based collections like HashMap or HashSet.'
+    ],
+    detailedExplanation: [
+      'When you insert an object as a key into a HashMap, it calculates the hashCode to find the correct bucket. Once in the bucket, it uses equals() to find the exact match.',
+      'If you override equals() to make two logical instances "equal", but forget to override hashCode(), the two instances will hash to different buckets. The Map will not be able to find the key.'
+    ],
+    codeExamples: [
+      {
+        title: 'Correctly overriding equals and hashCode',
+        language: 'java',
+        code: `import java.util.Objects;
+
+public class User {
+    private String email;
+
+    public User(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true; // Reference check
+        if (o == null || getClass() != o.getClass()) return false; // Type check
+        User user = (User) o;
+        return Objects.equals(email, user.email); // Value check
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email); // Must use same fields as equals
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'States the rule: Equal objects MUST have equal hash codes.',
+        'Explains the impact on HashMaps and HashSets (objects become unfindable).',
+        'Knows that hash collisions are allowed and handled (usually by a linked list or tree in the bucket).'
+      ],
+      juniorOrMidRedFlags: [
+        'Thinks equal hash codes mean the objects are equal.',
+        'Fails to mention hash-based collections when explaining why the contract exists.'
+      ],
+      seniorDifferentiators: [
+        'Explains how immutable objects make the best Map keys because their hashCode can be cached and won\'t change after insertion.',
+        'Mentions the performance implications of poorly distributed hash functions (O(1) degrades to O(log N) or O(N)).'
+      ],
+      followUpQuestions: [
+        'What happens if you mutate a field that is used in the hashCode calculation after the object has been added as a key to a HashMap?',
+        'Can you return a constant value like `1` for hashCode()? Is it legal?'
+      ]
+    },
+    tags: ['Core API', 'Collections', 'HashMap', 'equals', 'hashCode']
+  },
+  {
+    id: 'java-17',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Core API',
+    title: 'String Immutability and the String Pool',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'How Strings are stored in memory, the purpose of the String Pool, and why Strings are immutable.',
+    coreConcepts: [
+      'Strings in Java are immutable. Once created, their value cannot be changed. Operations like concatenation return a new String object.',
+      'The String Pool is a special area in the JVM Heap that caches literal String values to save memory.',
+      'Using the `==` operator on Strings compares memory references, whereas `.equals()` compares the actual character content.'
+    ],
+    detailedExplanation: [
+      'Because Strings are so common, Java optimizes memory by keeping a single copy of each literal string in the String Pool.',
+      'When you create a String using double quotes (e.g. `String s = "hello";`), Java checks the pool first. If you use `new String("hello")`, it creates a new object on the heap, bypassing the pool initially.',
+      'Immutability makes Strings inherently thread-safe, secure for caching, and ideal for use as HashMap keys.'
+    ],
+    codeExamples: [
+      {
+        title: 'String Pool vs Heap References',
+        language: 'java',
+        code: `public class StringDemo {
+    public static void main(String[] args) {
+        String s1 = "hello";
+        String s2 = "hello";
+        String s3 = new String("hello");
+        
+        System.out.println(s1 == s2);      // true: Both point to the same String Pool instance
+        System.out.println(s1 == s3);      // false: s3 is a new object on the regular heap
+        System.out.println(s1.equals(s3)); // true: Their content is the same
+        
+        // intern() method
+        String s4 = s3.intern();
+        System.out.println(s1 == s4);      // true: intern() gets the pool reference
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains that Immutability means the internal char array cannot be modified.',
+        'Mentions the String Pool as a memory-saving mechanism for literals.',
+        'Clearly distinguishes between `==` (reference check) and `.equals()` (value check).'
+      ],
+      juniorOrMidRedFlags: [
+        'Uses `==` to compare String values in code.',
+        'Does not know what the String Pool is or how literal creation differs from `new String()`.',
+        'Uses String concatenation inside loops instead of StringBuilder.'
+      ],
+      seniorDifferentiators: [
+        'Explains that since Java 9, Strings use a byte array with a coder flag (Compact Strings) instead of a char array, saving memory for Latin-1 strings.',
+        'Explains how String immutability is essential for classloading and security (so a string cannot be modified after security checks pass).'
+      ],
+      followUpQuestions: [
+        'Why should you use a `StringBuilder` or `StringBuffer` when doing heavy string concatenation in a loop?',
+        'Where was the String Pool located prior to Java 7, and why was it moved?'
+      ]
+    },
+    tags: ['String', 'Immutability', 'Memory', 'Core API']
+  },
+  {
+    id: 'java-18',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Concurrency',
+    title: 'CompletableFuture (Java 8)',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Writing non-blocking asynchronous code using CompletableFuture instead of blocking Threads or raw Futures.',
+    coreConcepts: [
+      'CompletableFuture implements both Future and CompletionStage, providing a huge API for composing, combining, and executing asynchronous steps.',
+      'Unlike the old `java.util.concurrent.Future`, you don\'t need to call the blocking `.get()` method to wait for results. Instead, you attach callbacks like `.thenApply()` or `.thenAccept()`.',
+      'It supports robust exception handling through `.exceptionally()` or `.handle()`.'
+    ],
+    detailedExplanation: [
+      'CompletableFuture allows you to build asynchronous pipelines. When the first step finishes, it automatically triggers the next step without blocking a thread waiting in the middle.',
+      'Methods ending with `Async` (like `thenApplyAsync`) execute the callback in a different thread, usually pulled from the common ForkJoinPool, or a custom Executor if provided.'
+    ],
+    codeExamples: [
+      {
+        title: 'Asynchronous pipelines with CompletableFuture',
+        language: 'java',
+        code: `import java.util.concurrent.CompletableFuture;
+
+public class AsyncDemo {
+    public void fetchAndProcess() {
+        // Start async task
+        CompletableFuture.supplyAsync(() -> fetchUserData())
+            // Chain a transformation (runs when fetchUserData completes)
+            .thenApply(user -> enrichUserData(user))
+            // Consume the result
+            .thenAccept(enriched -> System.out.println("Result: " + enriched))
+            // Handle any exceptions in the chain
+            .exceptionally(ex -> {
+                System.err.println("Failed: " + ex.getMessage());
+                return null;
+            });
+            
+        System.out.println("Pipeline created, running asynchronously...");
+    }
+
+    private String fetchUserData() { return "User123"; }
+    private String enrichUserData(String user) { return user + "_Enriched"; }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Identifies CompletableFuture as the modern way to handle async callbacks in Java.',
+        'Contrasts it with the older, blocking `Future.get()`.',
+        'Shows familiarity with basic methods like supplyAsync, thenApply, and exceptionally.'
+      ],
+      juniorOrMidRedFlags: [
+        'Only knows how to create a Thread or implement Runnable.',
+        'Creates a CompletableFuture but immediately calls `.get()`, blocking the main thread and defeating the purpose.'
+      ],
+      seniorDifferentiators: [
+        'Understands the difference between `thenApply` (synchronous on the completing thread) and `thenApplyAsync` (offloads to a thread pool).',
+        'Can explain how to combine multiple futures using `CompletableFuture.allOf()` or `anyOf()`.'
+      ],
+      followUpQuestions: [
+        'What thread pool does CompletableFuture use by default if you don\'t provide an Executor?',
+        'How does `thenCompose()` differ from `thenApply()`?'
+      ]
+    },
+    tags: ['Java 8', 'CompletableFuture', 'Concurrency', 'Async']
   }
 ];

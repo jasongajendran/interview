@@ -75,6 +75,21 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             Master the JVM CLI tools (jcmd, jstack) and JVM tuning flags necessary for troubleshooting enterprise systems.
           </p>
         </button>
+        
+        <button
+          onClick={() => onNavigate('visuals' as any)}
+          className="text-left bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-200 rounded-xl p-6 hover:shadow-md transition-all group md:col-span-2"
+        >
+          <div className="flex items-center gap-4 mb-3">
+            <div className="p-3 bg-indigo-100 text-indigo-600 rounded-lg group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+              <BookOpen className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">Visual Concepts</h3>
+          </div>
+          <p className="text-sm text-slate-600 ml-16">
+            Pictorial representations of complex Java architectures, JVM internals, thread models, and data structures.
+          </p>
+        </button>
       </div>
     </div>
   );

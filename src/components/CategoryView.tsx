@@ -7,6 +7,9 @@ import Markdown from 'react-markdown';
 
 import { HighlightText } from './HighlightText';
 
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 interface CategoryViewProps {
   categoryId: CategoryId;
 }
@@ -128,9 +131,13 @@ function QuestionCard({ question, isExpanded, onToggle }: { question: QuestionIt
                     {question.codeExamples.map((ex, i) => (
                       <div key={i} className="rounded-lg overflow-hidden border border-slate-200">
                         {ex.title && <div className="bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-700 border-b border-slate-200">{ex.title}</div>}
-                        <pre className="bg-slate-900 text-slate-50 p-4 overflow-x-auto text-sm font-mono leading-relaxed">
-                          <code>{ex.code}</code>
-                        </pre>
+                        <SyntaxHighlighter
+                          language={ex.language || 'java'}
+                          style={oneDark}
+                          customStyle={{ margin: 0, padding: '1rem', fontSize: '0.875rem' }}
+                        >
+                          {ex.code}
+                        </SyntaxHighlighter>
                         {ex.output && (
                           <div className="bg-slate-800 text-green-400 p-3 text-xs font-mono border-t border-slate-700">
                             {ex.output}

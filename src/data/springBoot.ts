@@ -531,5 +531,159 @@ server:
       ]
     },
     tags: ['Java 21', 'Virtual Threads', 'Project Loom', 'Spring Boot 3.2', 'Concurrency']
+  },
+  {
+    id: 'spring-02',
+    category: 'spring-boot',
+    categoryName: 'Spring Boot 3.x & Spring 6',
+    topic: 'REST API Error Handling',
+    title: 'Global Exception Handling with @ControllerAdvice and ProblemDetail',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Standardizing REST API error responses across the application using @RestControllerAdvice, @ExceptionHandler, and the RFC 7807 ProblemDetail specification.',
+    coreConcepts: [
+      '@RestControllerAdvice acts as an interceptor that surrounds the logic in your Controllers, allowing you to centralize error handling.',
+      '@ExceptionHandler maps specific exception classes to specific methods inside the advice.',
+      'Spring Boot 3 / Spring 6 introduced native support for RFC 7807 (Problem Details for HTTP APIs) via the ProblemDetail class.',
+      'Returning standardized error formats helps client developers handle exceptions uniformly without guessing custom JSON structures.'
+    ],
+    detailedExplanation: [
+      'Instead of putting try-catch blocks in every controller method and returning a custom error DTO, @RestControllerAdvice intercepts exceptions thrown by controllers globally.',
+      'With Spring 6, returning `ProblemDetail` is preferred over custom error DTOs. It standardizes fields like type, title, status, detail, and instance.',
+      'Validation exceptions (MethodArgumentNotValidException) can also be intercepted here to return a list of field-specific errors.'
+    ],
+    codeExamples: [
+      {
+        title: 'Global Error Handler using ProblemDetail (Spring 6)',
+        language: 'java',
+        code: `@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ProblemDetail handleNotFound(ResourceNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Resource Not Found");
+        problem.setProperty("timestamp", Instant.now());
+        return problem;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleValidationErrors(MethodArgumentNotValidException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
+        problem.setTitle("Bad Request");
+        
+        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
+            .map(error -> error.getField() + ": " + error.getDefaultMessage())
+            .collect(Collectors.toList());
+            
+        problem.setProperty("invalid_fields", errors);
+        return problem;
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Mentions @RestControllerAdvice and @ExceptionHandler for global handling.',
+        'Explains why centralized error handling is better than scattered try-catches (DRY principle).',
+        'Knows about Spring 6 RFC 7807 support via ProblemDetail (or uses a structured ErrorResponse DTO).',
+        'Explains how to handle bean validation (JSR-380) errors via MethodArgumentNotValidException.'
+      ],
+      juniorOrMidRedFlags: [
+        'Writes try-catch in every single controller method.',
+        'Returns HTTP 200 OK with an error message in the JSON body.',
+        'Returns internal stack traces to the API client.'
+      ],
+      seniorDifferentiators: [
+        'Discusses overriding ResponseEntityExceptionHandler for more granular control over built-in Spring MVC exceptions.',
+        'Mentions logging strategies (logging 500s as ERROR, 4xxs as WARN or INFO).'
+      ],
+      followUpQuestions: [
+        'How do you localize error messages for different languages based on the Accept-Language header?',
+        'If two @ExceptionHandler methods match an exception (e.g. RuntimeException and CustomException), which one is invoked?'
+      ]
+    },
+    tags: ['Spring Boot', 'REST API', 'Error Handling', 'RFC 7807']
+  },
+  {
+    id: 'spring-03',
+    category: 'spring-boot',
+    categoryName: 'Spring Boot 3.x & Spring 6',
+    topic: 'Configuration Management',
+    title: 'Externalized Configuration: @Value vs @ConfigurationProperties',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Best practices for managing application configuration, comparing field injection via @Value with strongly-typed @ConfigurationProperties.',
+    coreConcepts: [
+      '@Value is useful for injecting single configuration properties, but lacks type safety and validation.',
+      '@ConfigurationProperties binds hierarchical properties (e.g., yaml/properties files) to strongly-typed POJOs/Records.',
+      'Spring Boot provides relaxed binding (e.g., my-app.max-size binds to maxSize).',
+      '@ConfigurationProperties supports JSR-380 validation (@NotNull, @Min) to fail-fast on startup if configuration is missing or invalid.'
+    ],
+    detailedExplanation: [
+      'While `@Value("${my.app.timeout}")` is easy, it scatters magic strings across the codebase. If the property is missing and no default is provided, context loading fails.',
+      'For complex configurations (like AWS credentials, retry policies), `@ConfigurationProperties` groups them into a cohesive class.',
+      'In Spring Boot 3, using Java Records with `@ConfigurationProperties` is fully supported, allowing for immutable, thread-safe configuration objects.'
+    ],
+    codeExamples: [
+      {
+        title: 'Type-safe Configuration Properties (Spring Boot 3 Records)',
+        language: 'java',
+        code: `// application.yml
+// app:
+//   integration:
+//     api-url: https://api.example.com
+//     timeout-ms: 5000
+//     retries: 3
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
+
+@Validated
+@ConfigurationProperties(prefix = "app.integration")
+public record IntegrationProperties(
+    @NotBlank String apiUrl,
+    @Min(1000) int timeoutMs,
+    @Min(1) int retries
+) {}
+
+// Usage in Service
+@Service
+public class IntegrationService {
+    private final IntegrationProperties props;
+
+    public IntegrationService(IntegrationProperties props) {
+        this.props = props;
+    }
+    
+    public void execute() {
+        System.out.println("Calling " + props.apiUrl() + " with timeout " + props.timeoutMs());
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Differentiates between @Value for simple strings and @ConfigurationProperties for grouped, hierarchical data.',
+        'Explains the benefits of type safety and IDE auto-completion (with spring-boot-configuration-processor).',
+        'Mentions using JSR-380 validation (@Validated, @NotNull) to fail-fast during application startup.'
+      ],
+      juniorOrMidRedFlags: [
+        'Hardcodes configuration values in code instead of application.yml.',
+        'Uses @Value for injecting dozens of related properties instead of grouping them.',
+        'Does not know how to provide a default value in @Value (e.g., @Value("${property:default}"))'
+      ],
+      seniorDifferentiators: [
+        'Discusses using Spring Boot Configuration Processor to generate metadata for IDE autocomplete.',
+        'Explains how immutable configurations (Records or @ConstructorBinding) prevent accidental state changes at runtime.'
+      ],
+      followUpQuestions: [
+        'What is the order of precedence for Spring Boot configuration sources (e.g. application.yml vs command-line args vs env vars)?',
+        'How would you reload @ConfigurationProperties dynamically without restarting the application?'
+      ]
+    },
+    tags: ['Configuration', 'Spring Boot', 'Best Practices']
   }
 ];
