@@ -1,0 +1,124 @@
+  {
+    id: 'java-new-3',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Collections',
+    title: 'Fail-Fast vs Fail-Safe Iterators',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'The difference between fail-fast (ConcurrentModificationException) and fail-safe iterators in Java collections.',
+    coreConcepts: [
+      'Fail-fast iterators (e.g. ArrayList, HashMap) operate directly on the collection. If the collection is structurally modified while iterating (other than by the iterator\'s own remove method), they throw ConcurrentModificationException.',
+      'Fail-safe iterators (e.g. CopyOnWriteArrayList, ConcurrentHashMap) operate on a clone of the collection or use weak consistency, meaning they won\'t throw an exception if the collection is modified.',
+      'Fail-fast uses a `modCount` variable to track structural modifications.'
+    ],
+    detailedExplanation: [
+      'A common interview question involves removing an element from a List while iterating. Using a standard `for-each` loop to remove an element will trigger a ConcurrentModificationException because it uses a fail-fast iterator under the hood.',
+      'To safely remove elements during iteration on standard collections, you must use the `Iterator.remove()` method, not `List.remove()`.'
+    ],
+    codeExamples: [
+      {
+        title: 'Proper Removal during Iteration',
+        language: 'java',
+        code: `public class IteratorDemo {
+    public void removeElements() {
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C"));
+        
+        // Anti-pattern: Throws ConcurrentModificationException
+        // for (String s : list) { 
+        //    if (s.equals("B")) list.remove(s); 
+        // }
+
+        // Correct way (Pre-Java 8)
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            if (it.next().equals("B")) {
+                it.remove(); 
+            }
+        }
+
+        // Modern Java 8+ way
+        list.removeIf(s -> s.equals("B"));
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains that fail-fast iterators use `modCount` to detect modifications.',
+        'Identifies that ConcurrentHashMap and CopyOnWriteArrayList are fail-safe.',
+        'Mentions `Collection.removeIf()` as the modern way to remove elements.'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses fail-safe with thread-safety.',
+        'Thinks `for-each` loops are immune to ConcurrentModificationException.'
+      ],
+      seniorDifferentiators: [
+        'Explains how ConcurrentHashMap uses weakly consistent iterators (not a full clone, but reflects state at creation time).'
+      ],
+      followUpQuestions: [
+        'Why doesn\'t ConcurrentHashMap throw ConcurrentModificationException?'
+      ]
+    },
+    tags: ['Collections', 'Iterators', 'Core API']
+  },
+  {
+    id: 'java-new-4',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Core API',
+    title: 'Comparable vs Comparator',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Easy',
+    summary: 'When and how to use Comparable (natural ordering) versus Comparator (custom ordering) in Java.',
+    coreConcepts: [
+      'Comparable is an interface implemented by the class itself (e.g. `String implements Comparable<String>`). It defines the "natural ordering" of the object via the `compareTo` method.',
+      'Comparator is an external interface used to define custom, multiple sorting strategies via the `compare` method.',
+      'In Java 8, Comparator got many default and static methods (like `comparing`, `thenComparing`) making it very easy to chain sort conditions.'
+    ],
+    detailedExplanation: [
+      'If you have a `User` class, its natural ordering might be by ID. You would implement `Comparable<User>` on the class.',
+      'However, if you want to sort a list of Users by age, then by name, you would use an external `Comparator<User>`.',
+      'Java 8 makes this highly functional, allowing `Comparator.comparing(User::getAge).thenComparing(User::getName)`.'
+    ],
+    codeExamples: [
+      {
+        title: 'Java 8 Comparator Chaining',
+        language: 'java',
+        code: `import java.util.*;
+
+public class SortDemo {
+    public void sortUsers(List<User> users) {
+        // Natural ordering (Requires User to implement Comparable)
+        Collections.sort(users);
+
+        // Custom ordering using Java 8 Comparators
+        users.sort(
+            Comparator.comparing(User::getAge)
+                      .reversed() // Oldest first
+                      .thenComparing(User::getLastName)
+        );
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Distinguishes between internal (Comparable) and external (Comparator) sorting logic.',
+        'Mentions Java 8 functional capabilities like `Comparator.comparing`.',
+        'Understands the return values of compareTo (-1, 0, 1).'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses the method names (`compare` vs `compareTo`).',
+        'Struggles to explain how to sort the same object by two different fields.'
+      ],
+      seniorDifferentiators: [
+        'Explains performance implications of complex Comparators in large lists.',
+        'Mentions `comparingInt` to avoid autoboxing overhead.'
+      ],
+      followUpQuestions: [
+        'What is the contract between `compareTo()` and `equals()`?'
+      ]
+    },
+    tags: ['Collections', 'Sorting', 'Java 8']
+  },

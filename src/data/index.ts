@@ -102,22 +102,6 @@ export const CATEGORIES_META: CategoryMeta[] = [
     description: 'XSS vs CSRF, CSP headers, DOM security, Responsive design, SPA vs SSR, SameSite cookies',
     badge: 'Web Frontends',
     iconName: 'Layout'
-  },
-  {
-    id: 'ides-diagnostics',
-    name: 'IDEs & JVM Diagnostics',
-    shortName: 'Diagnostics',
-    description: 'jcmd, jstack, jmap, GC tuning flags (-Xlog:gc*), Native Memory Tracking, IntelliJ & Eclipse',
-    badge: 'JVM Tooling',
-    iconName: 'Terminal'
-  },
-  {
-    id: 'production-scenarios',
-    name: 'Production Outage Scenarios',
-    shortName: 'P1 Incidents',
-    description: 'Real-world P1/P2 outage forensics, thread starvation, Metaspace leaks, Deadlocks',
-    badge: 'Forensics',
-    iconName: 'AlertTriangle'
   }
 ];
 

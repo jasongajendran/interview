@@ -533,7 +533,7 @@ server:
     tags: ['Java 21', 'Virtual Threads', 'Project Loom', 'Spring Boot 3.2', 'Concurrency']
   },
   {
-    id: 'spring-02',
+    id: 'spring-08',
     category: 'spring-boot',
     categoryName: 'Spring Boot 3.x & Spring 6',
     topic: 'REST API Error Handling',
@@ -606,7 +606,7 @@ public class GlobalExceptionHandler {
     tags: ['Spring Boot', 'REST API', 'Error Handling', 'RFC 7807']
   },
   {
-    id: 'spring-03',
+    id: 'spring-09',
     category: 'spring-boot',
     categoryName: 'Spring Boot 3.x & Spring 6',
     topic: 'Configuration Management',

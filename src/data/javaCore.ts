@@ -2,6 +2,252 @@ import { QuestionItem } from '../types';
 
 export const javaCoreQuestions: QuestionItem[] = [
   {
+    id: 'java-new-3',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Collections',
+    title: 'Fail-Fast vs Fail-Safe Iterators',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'The difference between fail-fast (ConcurrentModificationException) and fail-safe iterators in Java collections.',
+    coreConcepts: [
+      'Fail-fast iterators (e.g. ArrayList, HashMap) operate directly on the collection. If the collection is structurally modified while iterating (other than by the iterator\'s own remove method), they throw ConcurrentModificationException.',
+      'Fail-safe iterators (e.g. CopyOnWriteArrayList, ConcurrentHashMap) operate on a clone of the collection or use weak consistency, meaning they won\'t throw an exception if the collection is modified.',
+      'Fail-fast uses a `modCount` variable to track structural modifications.'
+    ],
+    detailedExplanation: [
+      'A common interview question involves removing an element from a List while iterating. Using a standard `for-each` loop to remove an element will trigger a ConcurrentModificationException because it uses a fail-fast iterator under the hood.',
+      'To safely remove elements during iteration on standard collections, you must use the `Iterator.remove()` method, not `List.remove()`.'
+    ],
+    codeExamples: [
+      {
+        title: 'Proper Removal during Iteration',
+        language: 'java',
+        code: `public class IteratorDemo {
+    public void removeElements() {
+        List<String> list = new ArrayList<>(Arrays.asList("A", "B", "C"));
+        
+        // Anti-pattern: Throws ConcurrentModificationException
+        // for (String s : list) { 
+        //    if (s.equals("B")) list.remove(s); 
+        // }
+
+        // Correct way (Pre-Java 8)
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            if (it.next().equals("B")) {
+                it.remove(); 
+            }
+        }
+
+        // Modern Java 8+ way
+        list.removeIf(s -> s.equals("B"));
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains that fail-fast iterators use `modCount` to detect modifications.',
+        'Identifies that ConcurrentHashMap and CopyOnWriteArrayList are fail-safe.',
+        'Mentions `Collection.removeIf()` as the modern way to remove elements.'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses fail-safe with thread-safety.',
+        'Thinks `for-each` loops are immune to ConcurrentModificationException.'
+      ],
+      seniorDifferentiators: [
+        'Explains how ConcurrentHashMap uses weakly consistent iterators (not a full clone, but reflects state at creation time).'
+      ],
+      followUpQuestions: [
+        'Why doesn\'t ConcurrentHashMap throw ConcurrentModificationException?'
+      ]
+    },
+    tags: ['Collections', 'Iterators', 'Core API']
+  },
+  {
+    id: 'java-new-4',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Core API',
+    title: 'Comparable vs Comparator',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Easy',
+    summary: 'When and how to use Comparable (natural ordering) versus Comparator (custom ordering) in Java.',
+    coreConcepts: [
+      'Comparable is an interface implemented by the class itself (e.g. `String implements Comparable<String>`). It defines the "natural ordering" of the object via the `compareTo` method.',
+      'Comparator is an external interface used to define custom, multiple sorting strategies via the `compare` method.',
+      'In Java 8, Comparator got many default and static methods (like `comparing`, `thenComparing`) making it very easy to chain sort conditions.'
+    ],
+    detailedExplanation: [
+      'If you have a `User` class, its natural ordering might be by ID. You would implement `Comparable<User>` on the class.',
+      'However, if you want to sort a list of Users by age, then by name, you would use an external `Comparator<User>`.',
+      'Java 8 makes this highly functional, allowing `Comparator.comparing(User::getAge).thenComparing(User::getName)`.'
+    ],
+    codeExamples: [
+      {
+        title: 'Java 8 Comparator Chaining',
+        language: 'java',
+        code: `import java.util.*;
+
+public class SortDemo {
+    public void sortUsers(List<User> users) {
+        // Natural ordering (Requires User to implement Comparable)
+        Collections.sort(users);
+
+        // Custom ordering using Java 8 Comparators
+        users.sort(
+            Comparator.comparing(User::getAge)
+                      .reversed() // Oldest first
+                      .thenComparing(User::getLastName)
+        );
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Distinguishes between internal (Comparable) and external (Comparator) sorting logic.',
+        'Mentions Java 8 functional capabilities like `Comparator.comparing`.',
+        'Understands the return values of compareTo (-1, 0, 1).'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses the method names (`compare` vs `compareTo`).',
+        'Struggles to explain how to sort the same object by two different fields.'
+      ],
+      seniorDifferentiators: [
+        'Explains performance implications of complex Comparators in large lists.',
+        'Mentions `comparingInt` to avoid autoboxing overhead.'
+      ],
+      followUpQuestions: [
+        'What is the contract between `compareTo()` and `equals()`?'
+      ]
+    },
+    tags: ['Collections', 'Sorting', 'Java 8']
+  },
+  {
+    id: 'java-new-1',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Core API',
+    title: 'Optional Best Practices and Anti-Patterns',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Understanding the intended use of Optional as a return type and recognizing common Optional anti-patterns.',
+    coreConcepts: [
+      'Optional is intended to represent the possible absence of a return value, forcing the caller to explicitly handle the null case.',
+      'Optional should NOT be used as a parameter type, class field, or collection element.',
+      'Calling Optional.get() without Optional.isPresent() defeats the purpose of Optional and can throw NoSuchElementException.'
+    ],
+    detailedExplanation: [
+      'Introduced in Java 8, Optional was designed primarily to solve the problem of methods returning null and callers forgetting to check for it.',
+      'Anti-Pattern 1: Using Optional as a parameter. It forces the caller to write `method(Optional.of("value"))` or `method(Optional.empty())`, making the API clunky. Use method overloading instead.',
+      'Anti-Pattern 2: Using Optional as a field. Optional is not Serializable, which breaks serialization of enclosing objects.',
+      'Anti-Pattern 3: Nested Optionals or Optionals in Collections (e.g. `List<Optional<String>>`). A missing value in a collection should simply not be in the collection, or handled separately.'
+    ],
+    codeExamples: [
+      {
+        title: 'Proper Usage vs Anti-Patterns',
+        language: 'java',
+        code: `public class OptionalDemo {
+    // GOOD: Returning Optional
+    public Optional<User> findUser(String id) {
+        // ... DB lookup
+        return Optional.ofNullable(user);
+    }
+
+    // BAD: Optional as a parameter
+    public void updateUser(Optional<User> user) { ... }
+
+    public void demo() {
+        // BAD: Defeats the purpose
+        Optional<User> opt = findUser("123");
+        System.out.println(opt.get().getName()); // Might throw exception
+
+        // GOOD: Functional style
+        findUser("123")
+            .map(User::getName)
+            .ifPresent(System.out::println);
+            
+        // GOOD: Default values
+        User user = findUser("123").orElseGet(() -> createGuestUser());
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'States that Optional is primarily a return type.',
+        'Explains why it should not be used as a field (Not Serializable, memory overhead) or parameter.',
+        'Mentions functional methods like map, flatMap, and orElseGet.'
+      ],
+      juniorOrMidRedFlags: [
+        'Routinely calls `.get()` without `.isPresent()`.',
+        'Uses `if (opt.isPresent()) opt.get()` instead of functional mapping methods.'
+      ],
+      seniorDifferentiators: [
+        'Explains the difference between orElse (always evaluated) and orElseGet (lazily evaluated via Supplier).'
+      ],
+      followUpQuestions: [
+        'When would you use flatMap() instead of map() on an Optional?'
+      ]
+    },
+    tags: ['Optional', 'Java 8', 'Best Practices']
+  },
+  {
+    id: 'java-new-2',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Collections',
+    title: 'ArrayList vs LinkedList',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Easy',
+    summary: 'The internal data structures, time complexities, and modern CPU cache implications of List implementations.',
+    coreConcepts: [
+      'ArrayList uses a dynamic resizing array. Random access is O(1). Insertions at the end are O(1) amortized, but insertions in the middle are O(N) due to array shifting.',
+      'LinkedList uses a doubly-linked list. Access is O(N). Insertions in the middle are O(1) if you already have the Node reference, but O(N) to find the location.',
+      'Modern CPU architectures highly favor ArrayList due to spatial locality (cache friendliness). LinkedList nodes are scattered in memory causing cache misses.'
+    ],
+    detailedExplanation: [
+      'Historically, LinkedList was taught as the best choice for frequent middle insertions. However, on modern CPUs, ArrayList almost always outperforms LinkedList, even for middle insertions, unless the list is massive.',
+      'This is because moving contiguous blocks of memory in an array (using System.arraycopy) is highly optimized and leverages the L1/L2 CPU cache, whereas traversing a LinkedList causes constant cache misses.'
+    ],
+    codeExamples: [
+      {
+        title: 'Collection Initialization',
+        language: 'java',
+        code: `public class ListDemo {
+    public void demo() {
+        // If you know the capacity, specify it to avoid resizing overhead
+        List<String> arrList = new ArrayList<>(1000);
+        
+        // LinkedList has huge memory overhead (prev/next pointers + object header per element)
+        List<String> linkedList = new LinkedList<>();
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Understands the Big O time complexities for both structures.',
+        'States that ArrayList should be the default choice for almost all use cases.',
+        'Explains the CPU cache / spatial locality advantage of ArrayList.'
+      ],
+      juniorOrMidRedFlags: [
+        'Claims LinkedList is always faster for inserting/deleting elements.',
+        'Fails to mention memory overhead of LinkedList node objects.'
+      ],
+      seniorDifferentiators: [
+        'Explains how System.arraycopy optimizes array shifting.',
+        'Mentions the Garbage Collection impact of LinkedList (creating/destroying thousands of small Node objects).'
+      ],
+      followUpQuestions: [
+        'When resizing, how much does an ArrayList grow by default in Java?'
+      ]
+    },
+    tags: ['Collections', 'ArrayList', 'LinkedList', 'Performance']
+  },
+  {
     id: 'java-01',
     category: 'java-core',
     categoryName: 'Java 8+ & Core Internals',
@@ -1014,7 +1260,7 @@ Supplied List: [Dynamic Element]`
     tags: ['Method References', 'Lambdas', 'Functional Interfaces']
   },
   {
-    id: 'java-13',
+    id: 'java-14',
     category: 'java-core',
     categoryName: 'Java 8+ & Core Internals',
     topic: 'Exception Handling',
@@ -1083,7 +1329,7 @@ public class ExceptionDemo {
     tags: ['Exceptions', 'Error Handling', 'Best Practices']
   },
   {
-    id: 'java-14',
+    id: 'java-15',
     category: 'java-core',
     categoryName: 'Java 8+ & Core Internals',
     topic: 'Resource Management',
@@ -1157,7 +1403,7 @@ public class ResourceDemo {
     tags: ['Try-With-Resources', 'AutoCloseable', 'Memory Leaks']
   },
   {
-    id: 'java-15',
+    id: 'java-16',
     category: 'java-core',
     categoryName: 'Java 8+ & Core Internals',
     topic: 'Generics',
@@ -1227,7 +1473,7 @@ public class GenericsDemo {
     tags: ['Generics', 'Type Erasure', 'PECS', 'Core Java']
   },
   {
-    id: 'java-16',
+    id: 'java-17',
     category: 'java-core',
     categoryName: 'Java 8+ & Core Internals',
     topic: 'Core API',
@@ -1294,7 +1540,7 @@ public class User {
     tags: ['Core API', 'Collections', 'HashMap', 'equals', 'hashCode']
   },
   {
-    id: 'java-17',
+    id: 'java-18',
     category: 'java-core',
     categoryName: 'Java 8+ & Core Internals',
     topic: 'Core API',
@@ -1356,7 +1602,7 @@ public class User {
     tags: ['String', 'Immutability', 'Memory', 'Core API']
   },
   {
-    id: 'java-18',
+    id: 'java-19',
     category: 'java-core',
     categoryName: 'Java 8+ & Core Internals',
     topic: 'Concurrency',

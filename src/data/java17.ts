@@ -2,6 +2,182 @@ import { QuestionItem } from '../types';
 
 export const java17Questions: QuestionItem[] = [
   {
+    id: 'j17-new-1',
+    category: 'java-17',
+    categoryName: 'Java 8 to 17 Features',
+    topic: 'Language Features',
+    title: 'Local Variable Type Inference (var)',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Easy',
+    summary: 'Understanding when and how to use the var keyword introduced in Java 10.',
+    coreConcepts: [
+      'The var keyword allows local variable type inference, reducing verbosity without sacrificing static typing.',
+      'It can only be used for local variables inside methods, not for instance variables, method parameters, or return types.',
+      'The compiler infers the exact type at compile time based on the right-hand side of the assignment.'
+    ],
+    detailedExplanation: [
+      'Introduced in Java 10, var is syntactic sugar. The byte code produced is identical to explicit typing.',
+      'You cannot use var without an initializer (e.g. `var name;` is illegal).',
+      'It is highly recommended when the type is obvious from the right-hand side (e.g. `var list = new ArrayList<String>();`), but frowned upon if it reduces readability (e.g. `var result = process();` where the return type is unclear).'
+    ],
+    codeExamples: [
+      {
+        title: 'Using var correctly',
+        language: 'java',
+        code: `public class VarDemo {
+    // var is ILLEGAL here:
+    // var instanceField = "Hello";
+
+    public void demo() {
+        // Obvious type
+        var map = new HashMap<String, List<Integer>>();
+        
+        // Inside loops
+        for (var entry : map.entrySet()) {
+            System.out.println(entry.getKey());
+        }
+        
+        // Illegal: Cannot use without initializer or with null
+        // var x; 
+        // var y = null; 
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'States that var is resolved at compile-time (Java is still statically typed).',
+        'Knows that it is restricted to local variables.',
+        'Mentions readability concerns as a reason not to overuse it.'
+      ],
+      juniorOrMidRedFlags: [
+        'Thinks var makes Java dynamically typed like JavaScript.',
+        'Believes var can be used for class fields.'
+      ],
+      seniorDifferentiators: [
+        'Explains how var interacts with non-denotable types (e.g. anonymous classes).'
+      ],
+      followUpQuestions: [
+        'Can you use var in a lambda expression parameter?'
+      ]
+    },
+    tags: ['Java 10', 'var', 'Type Inference']
+  },
+  {
+    id: 'j17-new-2',
+    category: 'java-17',
+    categoryName: 'Java 8 to 17 Features',
+    topic: 'Language Features',
+    title: 'Text Blocks (Java 15)',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Easy',
+    summary: 'Using Text Blocks to write multi-line strings easily without messy concatenation and escaping.',
+    coreConcepts: [
+      'Text blocks use triple quotes (`\"\"\"`) to declare multi-line string literals.',
+      'They automatically strip incidental indentation (leading whitespace common to all lines in the block).',
+      'They avoid the need for escaping quotes and newlines.'
+    ],
+    detailedExplanation: [
+      'Before Java 15, writing JSON, HTML, or SQL queries inside Java code required endless String concatenation and `\\n` escapes.',
+      'Text blocks make code much cleaner. The compiler looks at the indentation of the closing `\"\"\"` and the content to determine how much leading whitespace to strip.'
+    ],
+    codeExamples: [
+      {
+        title: 'Text Blocks vs Legacy Strings',
+        language: 'java',
+        code: `// The old way
+String jsonLegacy = "{\\n" +
+                    "  \\"name\\": \\"John\\",\\n" +
+                    "  \\"age\\": 30\\n" +
+                    "}";
+
+// The new way (Java 15+)
+String jsonBlock = """
+                   {
+                     "name": "John",
+                     "age": 30
+                   }
+                   """;`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Mentions the triple quote syntax.',
+        'Explains that it automatically handles incidental indentation.',
+        'Notes its usefulness for JSON, SQL, and HTML.'
+      ],
+      juniorOrMidRedFlags: [
+        'Unaware of the feature and relies on string concatenation for large queries.'
+      ],
+      seniorDifferentiators: [
+        'Understands how to use `\\` at the end of a line to prevent a newline character from being inserted, and `\\s` to preserve trailing whitespace.'
+      ],
+      followUpQuestions: [
+        'How does the compiler decide which leading spaces are incidental vs intentional?'
+      ]
+    },
+    tags: ['Java 15', 'Text Blocks', 'Strings']
+  },
+  {
+    id: 'j17-new-3',
+    category: 'java-17',
+    categoryName: 'Java 8 to 17 Features',
+    topic: 'Language Features',
+    title: 'Switch Expressions (Java 14)',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'How modern switch expressions differ from legacy switch statements (arrow syntax, yield, exhaustiveness).',
+    coreConcepts: [
+      'Switch can now be used as an expression (returning a value) rather than just a statement.',
+      'Uses arrow syntax (`->`) which avoids fall-through (no need for `break`).',
+      'The `yield` keyword is used to return a value from a block within a switch expression.',
+      'Switch expressions must be exhaustive (cover all possible values or have a default).'
+    ],
+    detailedExplanation: [
+      'Traditional switch statements are notoriously error-prone due to fall-through (forgetting a break statement).',
+      'Switch expressions solve this by executing only the matched case. Because they evaluate to a value, the compiler enforces exhaustiveness, which is incredibly powerful when switching over an Enum.'
+    ],
+    codeExamples: [
+      {
+        title: 'Switch Expressions',
+        language: 'java',
+        code: `public class SwitchDemo {
+    enum Day { MON, TUE, WED, THU, FRI, SAT, SUN }
+
+    public int getWorkingHours(Day day) {
+        // Switch as an expression returning a value
+        return switch (day) {
+            case MON, TUE, WED, THU, FRI -> 8;
+            case SAT, SUN -> {
+                System.out.println("It\\'s the weekend!");
+                yield 0; // Using yield to return from a block
+            }
+            // No default needed because all Enum values are covered
+        };
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains the arrow `->` syntax and lack of fall-through.',
+        'Explains that it evaluates to a value (expression).',
+        'Explains the `yield` keyword for blocks.'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses `yield` with the Thread.yield() concurrency method.',
+        'Thinks `return` is used inside the switch block instead of `yield`.'
+      ],
+      seniorDifferentiators: [
+        'Explains how exhaustiveness checking interacts with Sealed Classes to eliminate the need for default clauses in modern Java.'
+      ],
+      followUpQuestions: [
+        'If you add a new value to the Enum, what happens when you compile the switch expression?'
+      ]
+    },
+    tags: ['Java 14', 'Switch', 'Control Flow']
+  },
+  {
     id: 'j17-01',
     category: 'java-17',
     categoryName: 'Java 8 to 17 Features',

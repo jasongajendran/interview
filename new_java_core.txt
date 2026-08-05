@@ -1,0 +1,122 @@
+  {
+    id: 'java-new-1',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Core API',
+    title: 'Optional Best Practices and Anti-Patterns',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Understanding the intended use of Optional as a return type and recognizing common Optional anti-patterns.',
+    coreConcepts: [
+      'Optional is intended to represent the possible absence of a return value, forcing the caller to explicitly handle the null case.',
+      'Optional should NOT be used as a parameter type, class field, or collection element.',
+      'Calling Optional.get() without Optional.isPresent() defeats the purpose of Optional and can throw NoSuchElementException.'
+    ],
+    detailedExplanation: [
+      'Introduced in Java 8, Optional was designed primarily to solve the problem of methods returning null and callers forgetting to check for it.',
+      'Anti-Pattern 1: Using Optional as a parameter. It forces the caller to write `method(Optional.of("value"))` or `method(Optional.empty())`, making the API clunky. Use method overloading instead.',
+      'Anti-Pattern 2: Using Optional as a field. Optional is not Serializable, which breaks serialization of enclosing objects.',
+      'Anti-Pattern 3: Nested Optionals or Optionals in Collections (e.g. `List<Optional<String>>`). A missing value in a collection should simply not be in the collection, or handled separately.'
+    ],
+    codeExamples: [
+      {
+        title: 'Proper Usage vs Anti-Patterns',
+        language: 'java',
+        code: `public class OptionalDemo {
+    // GOOD: Returning Optional
+    public Optional<User> findUser(String id) {
+        // ... DB lookup
+        return Optional.ofNullable(user);
+    }
+
+    // BAD: Optional as a parameter
+    public void updateUser(Optional<User> user) { ... }
+
+    public void demo() {
+        // BAD: Defeats the purpose
+        Optional<User> opt = findUser("123");
+        System.out.println(opt.get().getName()); // Might throw exception
+
+        // GOOD: Functional style
+        findUser("123")
+            .map(User::getName)
+            .ifPresent(System.out::println);
+            
+        // GOOD: Default values
+        User user = findUser("123").orElseGet(() -> createGuestUser());
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'States that Optional is primarily a return type.',
+        'Explains why it should not be used as a field (Not Serializable, memory overhead) or parameter.',
+        'Mentions functional methods like map, flatMap, and orElseGet.'
+      ],
+      juniorOrMidRedFlags: [
+        'Routinely calls `.get()` without `.isPresent()`.',
+        'Uses `if (opt.isPresent()) opt.get()` instead of functional mapping methods.'
+      ],
+      seniorDifferentiators: [
+        'Explains the difference between orElse (always evaluated) and orElseGet (lazily evaluated via Supplier).'
+      ],
+      followUpQuestions: [
+        'When would you use flatMap() instead of map() on an Optional?'
+      ]
+    },
+    tags: ['Optional', 'Java 8', 'Best Practices']
+  },
+  {
+    id: 'java-new-2',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Collections',
+    title: 'ArrayList vs LinkedList',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Easy',
+    summary: 'The internal data structures, time complexities, and modern CPU cache implications of List implementations.',
+    coreConcepts: [
+      'ArrayList uses a dynamic resizing array. Random access is O(1). Insertions at the end are O(1) amortized, but insertions in the middle are O(N) due to array shifting.',
+      'LinkedList uses a doubly-linked list. Access is O(N). Insertions in the middle are O(1) if you already have the Node reference, but O(N) to find the location.',
+      'Modern CPU architectures highly favor ArrayList due to spatial locality (cache friendliness). LinkedList nodes are scattered in memory causing cache misses.'
+    ],
+    detailedExplanation: [
+      'Historically, LinkedList was taught as the best choice for frequent middle insertions. However, on modern CPUs, ArrayList almost always outperforms LinkedList, even for middle insertions, unless the list is massive.',
+      'This is because moving contiguous blocks of memory in an array (using System.arraycopy) is highly optimized and leverages the L1/L2 CPU cache, whereas traversing a LinkedList causes constant cache misses.'
+    ],
+    codeExamples: [
+      {
+        title: 'Collection Initialization',
+        language: 'java',
+        code: `public class ListDemo {
+    public void demo() {
+        // If you know the capacity, specify it to avoid resizing overhead
+        List<String> arrList = new ArrayList<>(1000);
+        
+        // LinkedList has huge memory overhead (prev/next pointers + object header per element)
+        List<String> linkedList = new LinkedList<>();
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Understands the Big O time complexities for both structures.',
+        'States that ArrayList should be the default choice for almost all use cases.',
+        'Explains the CPU cache / spatial locality advantage of ArrayList.'
+      ],
+      juniorOrMidRedFlags: [
+        'Claims LinkedList is always faster for inserting/deleting elements.',
+        'Fails to mention memory overhead of LinkedList node objects.'
+      ],
+      seniorDifferentiators: [
+        'Explains how System.arraycopy optimizes array shifting.',
+        'Mentions the Garbage Collection impact of LinkedList (creating/destroying thousands of small Node objects).'
+      ],
+      followUpQuestions: [
+        'When resizing, how much does an ArrayList grow by default in Java?'
+      ]
+    },
+    tags: ['Collections', 'ArrayList', 'LinkedList', 'Performance']
+  },
