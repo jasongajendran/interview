@@ -455,5 +455,105 @@ public class EmailTemplateService {
       ]
     },
     tags: ['FreeMarker', 'Null Safety', 'Email Templates', 'JavaMail']
+  },
+  {
+    id: 'legacy-struts-01',
+    category: 'legacy-web',
+    categoryName: 'Struts, JSF & Jakarta EE',
+    topic: 'Apache Struts',
+    title: 'Apache Struts Architecture & Action Classes',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Understanding the Struts MVC architecture, the role of Action classes, struts-config.xml or annotations, and common pitfalls in Struts application development.',
+    coreConcepts: [
+      'Apache Struts uses the Front Controller pattern with the ActionServlet as the central controller.',
+      'Action classes process user requests, interact with the model, and return an ActionForward to dictate the view.',
+      'Struts 2 introduced interceptors for cross-cutting concerns and POJO-based Actions, moving away from extending base Action classes.'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains the difference between Struts 1 (ActionForm, ActionServlet) and Struts 2 (Interceptors, ValueStack).',
+        'Understands how configuration is handled via XML (struts.xml) or annotations.',
+        'Mentions the importance of thread safety in Struts 1 Action classes (which act as singletons).'
+      ],
+      juniorOrMidRedFlags: [
+        'Fails to recognize thread-safety issues with instance variables in Struts 1 Actions.'
+      ],
+      seniorDifferentiators: [
+        'Discusses the security history of Struts 2 (e.g., OGNL injection vulnerabilities) and how to mitigate them.',
+        'Explains migration strategies from legacy Struts to modern frameworks like Spring MVC.'
+      ],
+      followUpQuestions: [
+        'How do interceptors work in Struts 2, and how do they compare to Servlet Filters?'
+      ]
+    },
+    tags: ['Apache Struts', 'MVC', 'Legacy Web', 'Java EE']
+  },
+  {
+    id: 'legacy-servlet-01',
+    category: 'legacy-web',
+    categoryName: 'Struts, JSF & Jakarta EE',
+    topic: 'Jakarta Servlet',
+    title: 'Jakarta Servlet Lifecycle & Filters',
+    seniority: 'Junior (1-3 YOE)',
+    difficulty: 'Easy',
+    summary: 'Core understanding of the Servlet lifecycle (init, service, destroy), multithreading, and the Servlet Filter chain.',
+    coreConcepts: [
+      'The Servlet lifecycle consists of init(), service() (dispatching to doGet/doPost), and destroy().',
+      'Servlets are typically singletons; therefore, instance variables are not thread-safe and can lead to severe race conditions.',
+      'Filters are used to intercept requests/responses for logging, authentication, CORS, or modifying headers.'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Correctly outlines the lifecycle methods and their execution triggers.',
+        'Explicitly states that Servlets are inherently multi-threaded and instance variables must be avoided or synchronized.',
+        'Explains how the FilterChain passes requests to the next filter or the target servlet.'
+      ],
+      juniorOrMidRedFlags: [
+        'Creates instance variables to hold request-scoped data in a Servlet.',
+        'Does not know how to configure a Servlet via web.xml or @WebServlet.'
+      ],
+      seniorDifferentiators: [
+        'Discusses Servlet 3.0+ asynchronous processing (AsyncContext) to free up Tomcats thread pool during long-running tasks.'
+      ],
+      followUpQuestions: [
+        'How does Servlet 3.0 asynchronous processing improve application scalability compared to blocking I/O?'
+      ]
+    },
+    tags: ['Jakarta Servlet', 'Lifecycle', 'Concurrency', 'Filters']
+  },
+  {
+    id: 'legacy-messaging-01',
+    category: 'legacy-web',
+    categoryName: 'Struts, JSF & Jakarta EE',
+    topic: 'Jakarta Messaging (JMS)',
+    title: 'Jakarta Messaging (JMS) Domains & Message-Driven Beans',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Differences between Point-to-Point (Queues) and Publish-Subscribe (Topics) models, and how Message-Driven Beans (MDBs) integrate with JMS.',
+    coreConcepts: [
+      'JMS defines two primary models: Point-to-Point (one consumer per message via Queues) and Publish/Subscribe (multiple consumers via Topics).',
+      'Message-Driven Beans (MDB) provide a standard, container-managed way to asynchronously process JMS messages in an enterprise application.',
+      'JMS allows for durable subscriptions on topics to ensure messages are not missed while the consumer is offline.'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Clearly distinguishes between Queue (P2P) and Topic (Pub/Sub).',
+        'Explains the role of ConnectionFactory and Destination.',
+        'Mentions the transactional capabilities of JMS and acknowledging modes (AUTO_ACKNOWLEDGE, CLIENT_ACKNOWLEDGE).'
+      ],
+      juniorOrMidRedFlags: [
+        'Thinks multiple consumers on a Queue will all receive the same message.',
+        'Does not understand the difference between a durable and non-durable topic subscription.'
+      ],
+      seniorDifferentiators: [
+        'Discusses JMS transaction management (XA transactions) and integration with standard JTA.',
+        'Compares JMS limitations to modern brokers like Apache Kafka.'
+      ],
+      followUpQuestions: [
+        'How does a Message-Driven Bean (MDB) scale to handle high message throughput in a Java EE container?'
+      ]
+    },
+    tags: ['JMS', 'Jakarta Messaging', 'MDB', 'Queues', 'Topics']
   }
 ];

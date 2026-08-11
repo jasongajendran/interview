@@ -13,6 +13,7 @@ import { microservicesSecurityQuestions } from './microservicesSecurity';
 import { productionScenarios } from './productionScenarios';
 import { diagnosticTools } from './idesDiagnostics';
 import { awsCloudQuestions } from './awsCloud';
+import { designPatternsQuestions } from './designPatterns';
 
 export interface CategoryMeta {
   id: CategoryId;
@@ -82,9 +83,9 @@ export const CATEGORIES_META: CategoryMeta[] = [
   },
   {
     id: 'legacy-web',
-    name: 'JSF & FreeMarker (FTL)',
-    shortName: 'JSF & FTL',
-    description: 'JSF 6-Phase Lifecycle, ManagedBean vs CDI, ViewExpiredException, PrimeFaces, FTL macros',
+    name: 'Struts, JSF & Jakarta EE',
+    shortName: 'Jakarta EE & Legacy Web',
+    description: 'JSF 6-Phase Lifecycle, Apache Struts, Jakarta Servlets, Jakarta Messaging (JMS), FreeMarker (FTL)',
     badge: 'Enterprise Web',
     iconName: 'Layers'
   },
@@ -100,7 +101,7 @@ export const CATEGORIES_META: CategoryMeta[] = [
     id: 'ui-frontend',
     name: 'UI Technologies & Web Security',
     shortName: 'UI & Security',
-    description: 'XSS vs CSRF, CSP headers, DOM security, Responsive design, SPA vs SSR, SameSite cookies',
+    description: 'Angular, jQuery, JSON, Accessibility (WCAG AA/AAA), XSS, CSRF, DoS, Responsive design',
     badge: 'Web Frontends',
     iconName: 'Layout'
   },
@@ -111,6 +112,14 @@ export const CATEGORIES_META: CategoryMeta[] = [
     description: 'EC2, S3, RDS, DynamoDB, Fargate, Lambda, ALB/NLB, Route 53',
     badge: 'Cloud',
     iconName: 'Cloud'
+  },
+  {
+    id: 'design-patterns',
+    name: 'Software Design Patterns',
+    shortName: 'Design Patterns',
+    description: 'Singleton, Strategy, Observer, Factory, Decorator, Builder',
+    badge: 'Architecture',
+    iconName: 'Puzzle'
   }
 ];
 
@@ -126,7 +135,8 @@ export const allQuestions: QuestionItem[] = [
   ...legacyWebQuestions,
   ...jbossWildflyQuestions,
   ...uiFrontendQuestions,
-  ...awsCloudQuestions
+  ...awsCloudQuestions,
+  ...designPatternsQuestions
 ];
 
 export {
@@ -142,6 +152,7 @@ export {
   jbossWildflyQuestions,
   uiFrontendQuestions,
   awsCloudQuestions,
+  designPatternsQuestions,
   productionScenarios,
   diagnosticTools
 };

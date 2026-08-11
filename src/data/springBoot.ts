@@ -751,5 +751,234 @@ public class IntegrationService {
       ]
     },
     tags: ['Configuration', 'Spring Boot', 'Best Practices']
+  },
+  {
+    id: 'spring-mvc-01',
+    category: 'spring-boot',
+    categoryName: 'Spring Boot 3.x & Spring 6',
+    topic: 'Spring MVC',
+    title: 'Spring MVC Architecture & DispatcherServlet',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Understanding the Front Controller pattern in Spring MVC, DispatcherServlet lifecycle, and the difference between @Controller and @RestController.',
+    coreConcepts: [
+      'DispatcherServlet is the Front Controller that intercepts all incoming HTTP requests and delegates them to appropriate handler mappings.',
+      '@RestController is a convenience annotation combining @Controller and @ResponseBody, meaning the returned object is serialized directly to the HTTP response (JSON/XML) rather than resolving a View.',
+      'HandlerMapping maps the incoming request URL to a specific controller method (handler).'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains the flow: Request -> DispatcherServlet -> HandlerMapping -> Controller -> ModelAndView (or JSON/XML response).',
+        'Clearly distinguishes @Controller (returns a view name like a Thymeleaf or JSP template) from @RestController (returns data).',
+        'Mentions MessageConverters (like Jackson) which serialize objects to JSON in @RestController.'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses @Controller and @RestController.',
+        'Does not know what the DispatcherServlet is or how the Front Controller pattern works.'
+      ],
+      seniorDifferentiators: [
+        'Discusses HandlerInterceptors for pre/post processing requests globally.',
+        'Explains the impact of asynchronous processing (DeferredResult, Callable) on the servlet thread pool.'
+      ],
+      followUpQuestions: [
+        'How would you write a custom HandlerInterceptor to log the execution time of every request?'
+      ]
+    },
+    tags: ['Spring MVC', 'DispatcherServlet', 'Controllers', 'REST']
+  },
+  {
+    id: 'spring-virtual-threads-01',
+    category: 'spring-boot',
+    categoryName: 'Spring Boot 3.x & Spring 6',
+    topic: 'Spring Boot 3.2+ & Loom',
+    title: 'Virtual Threads (Project Loom) in Spring Boot 3.2+: Setup, Carrier Pinning & Pitfalls',
+    seniority: 'Lead / Architect (13-15+ YOE)',
+    difficulty: 'Architect-Level',
+    summary: 'Enabling Virtual Threads in Spring Boot 3.2+, how Tomcat and @Async execute on virtual threads, carrier thread pinning risks on synchronized blocks, and migration strategies.',
+    coreConcepts: [
+      'Enabling `spring.threads.virtual.enabled=true` in Spring Boot 3.2+ automatically configures embedded Tomcat and standard TaskExecutors to spawn a new lightweight Virtual Thread per HTTP request.',
+      'Virtual Threads run in user-space and are mounted onto a small pool of OS "Carrier Threads" (ForkJoinPool). When a blocking I/O operation occurs (socket read, JDBC query), the JVM unmounts the virtual thread, freeing the carrier thread for other work.',
+      'Carrier Pinning: If a virtual thread executes a blocking operation inside a `synchronized` block/method or native method (JNI), the virtual thread CANNOT be unmounted and stays pinned to the OS carrier thread, causing thread pool exhaustion.',
+      'Fix for Pinning: Replace legacy `synchronized` blocks with `java.util.concurrent.locks.ReentrantLock`.'
+    ],
+    detailedExplanation: [
+      'Before Spring Boot 3.2, high-throughput I/O required asynchronous reactive stacks (Spring WebFlux / Netty) with complex reactive operators (Mono/Flux) and difficult stack-trace debugging.',
+      'With Virtual Threads, developers can write simple, imperative, blocking code (e.g. standard Spring MVC + JPA) while achieving the massive concurrency scalability of reactive systems.',
+      'Diagnostic Flag: Run with `-Djdk.tracePinnedThreads=full` to print stack traces whenever a virtual thread blocks while pinned to an OS thread.'
+    ],
+    codeExamples: [
+      {
+        title: 'Spring Boot 3.2 application.yml Configuration',
+        language: 'yaml',
+        code: `spring:
+  threads:
+    virtual:
+      enabled: true # Switches Tomcat and Async TaskExecutor to Virtual Threads!
+
+server:
+  tomcat:
+    threads:
+      max: 200 # Note: Ignored when virtual threads are enabled (virtual threads are unbound)`
+      },
+      {
+        title: 'Refactoring synchronized to ReentrantLock to Prevent Pinning',
+        language: 'java',
+        code: `// BAD: Causes Carrier Thread Pinning on blocking I/O!
+public synchronized String callExternalService(String url) {
+    return restTemplate.getForObject(url, String.class); // PINNED!
+}
+
+// GOOD: ReentrantLock unmounts cleanly on Virtual Threads
+private final Lock lock = new ReentrantLock();
+
+public String callExternalServiceSafe(String url) {
+    lock.lock();
+    try {
+        return restClient.get().uri(url).retrieve().body(String.class);
+    } finally {
+        lock.unlock();
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains that `spring.threads.virtual.enabled=true` switches Tomcat request processing and @Async execution to Virtual Threads.',
+        'Explains the M:N scheduling model (Virtual Threads mounted on OS Carrier Threads).',
+        'Explains the cause of Carrier Pinning (`synchronized` + blocking I/O) and the solution (`ReentrantLock`).',
+        'Understands that Virtual Threads do not help CPU-bound tasks, only I/O-bound workloads.'
+      ],
+      juniorOrMidRedFlags: [
+        'Believes Virtual Threads make CPU-intensive computations run faster.',
+        'Attempts to pool Virtual Threads (e.g. using custom ThreadPoolExecutor) instead of creating them per task.'
+      ],
+      seniorDifferentiators: [
+        'Explains why `ThreadLocal` variables must be used with caution due to memory retention across millions of short-lived virtual threads, and mentions Java 21 Scoped Values as the modern replacement.',
+        'Discusses database connection pool sizing: Virtual threads increase concurrent active requests, so HikariCP connection limits and DB CPU become the new bottleneck.'
+      ],
+      followUpQuestions: [
+        'Why does pooling Virtual Threads degrade JVM performance rather than improving it?',
+        'How do Scoped Values improve on ThreadLocal in virtual thread environments?'
+      ]
+    },
+    tags: ['Spring Boot 3.2', 'Virtual Threads', 'Project Loom', 'Concurrency', 'Carrier Pinning']
+  },
+  {
+    id: 'spring-observability-01',
+    category: 'spring-boot',
+    categoryName: 'Spring Boot 3.x & Spring 6',
+    topic: 'Observability & Tracing',
+    title: 'Spring Boot 3 Observability: Micrometer Observation API & OpenTelemetry Tracing',
+    seniority: 'Senior (10-12 YOE)',
+    difficulty: 'Hard',
+    summary: 'The transition from Spring Cloud Sleuth to Micrometer Tracing in Spring Boot 3, W3C Trace Context propagation, and custom Observation instrumentation.',
+    coreConcepts: [
+      'Spring Boot 3 replaced Spring Cloud Sleuth with the unified `Micrometer Observation` API (`io.micrometer:micrometer-observation`) and `Micrometer Tracing`.',
+      'A single Observation instrument generates both metrics (Prometheus timers/counters) and distributed tracing spans (Zipkin/OpenTelemetry/Jaeger).',
+      'Trace Context Propagation: HTTP headers (`traceparent`, `tracestate` per W3C specification or B3 headers) automatically propagate the Trace ID across downstream microservice calls via RestClient, WebClient, or Feign.'
+    ],
+    codeExamples: [
+      {
+        title: 'Custom Observation Instrumentation in Spring Boot 3',
+        language: 'java',
+        code: `@Service
+public class PaymentProcessingService {
+    private final ObservationRegistry observationRegistry;
+
+    public PaymentProcessingService(ObservationRegistry observationRegistry) {
+        this.observationRegistry = observationRegistry;
+    }
+
+    public PaymentResult processPayment(PaymentRequest req) {
+        // Automatically measures execution latency & creates distributed tracing span
+        return Observation.createNotStarted("payment.execution", observationRegistry)
+            .lowCardinalityKeyValue("payment.gateway", req.getGateway()) // Included in metrics & trace tags
+            .highCardinalityKeyValue("payment.card.last4", req.getLast4()) // Trace span tag only
+            .observe(() -> {
+                // Business logic here...
+                return executeGatewayCharge(req);
+            });
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains that Spring Cloud Sleuth is deprecated and replaced by Micrometer Tracing in Spring 6 / Boot 3.',
+        'Explains how TraceId correlates logs across multiple distributed services and SpanId represents an individual unit of work.',
+        'Explains low-cardinality keys (safe for Prometheus metric dimensions) vs high-cardinality keys (only attached to tracing spans).'
+      ],
+      juniorOrMidRedFlags: [
+        'Attempts to import `org.springframework.cloud:spring-cloud-starter-sleuth` in a Spring Boot 3.x project.',
+        'Puts high-cardinality attributes (like UUIDs or user IDs) into metric labels, causing Prometheus memory explosion.'
+      ],
+      seniorDifferentiators: [
+        'Explains how W3C `traceparent` header format (`00-{traceId}-{spanId}-{traceFlags}`) works across polyglot microservices.',
+        'Discusses sampling strategies (Probabilistic vs Tail-based sampling) to manage trace data storage costs.'
+      ],
+      followUpQuestions: [
+        'How do you propagate trace context across asynchronous threads or Kafka messaging topics in Spring Boot 3?'
+      ]
+    },
+    tags: ['Spring Boot 3', 'Micrometer', 'Observability', 'OpenTelemetry', 'Distributed Tracing']
+  },
+  {
+    id: 'spring-resilience4j-01',
+    category: 'spring-boot',
+    categoryName: 'Spring Boot 3.x & Spring 6',
+    topic: 'Resilience Patterns',
+    title: 'Resilience4j in Spring Boot: Circuit Breaker, RateLimiter & Bulkhead',
+    seniority: 'Senior (10-12 YOE)',
+    difficulty: 'Hard',
+    summary: 'Implementing fault tolerance in distributed microservices using Resilience4j annotations, state machine transitions, and fallback methods.',
+    coreConcepts: [
+      'Circuit Breaker State Machine: CLOSED (normal traffic), OPEN (failure rate exceeded; instantly rejects calls with CallNotPermittedException), HALF-OPEN (allows trial requests to test downstream health).',
+      'RateLimiter: Restricts the rate of requests within a time window (e.g. 100 req/sec) to avoid overwhelming downstream services or exceeding API quotas.',
+      'Bulkhead: Isolates resource pools (ThreadPool Bulkhead or Semaphore Bulkhead) so that a failure or slow response in one downstream service does not exhaust all application threads.'
+    ],
+    codeExamples: [
+      {
+        title: 'Resilience4j CircuitBreaker with Fallback in Spring Boot',
+        language: 'java',
+        code: `@Service
+public class CurrencyConversionService {
+
+    @CircuitBreaker(name = "forexService", fallbackMethod = "fallbackForexRate")
+    @Retry(name = "forexService")
+    public BigDecimal getExchangeRate(String from, String to) {
+        return restClient.get()
+            .uri("/rates?from=" + from + "&to=" + to)
+            .retrieve()
+            .body(ExchangeRateResponse.class)
+            .getRate();
+    }
+
+    // Fallback signature MUST match original parameters + Throwable as the last argument
+    public BigDecimal fallbackForexRate(String from, String to, Throwable ex) {
+        log.warn("Forex API failed due to [{}]. Using cached fallback rate.", ex.getMessage());
+        return getCachedFallbackRate(from, to);
+    }
+}`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Draws/explains the Circuit Breaker state transitions: CLOSED -> OPEN -> HALF-OPEN -> CLOSED.',
+        'Explains sliding window metrics: Count-based (e.g. last 100 calls) vs Time-based (e.g. last 60 seconds).',
+        'Mentions the exact fallback method signature rule (must have the same parameters plus a trailing Exception/Throwable parameter).'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses Netflix Hystrix (deprecated) with Resilience4j.',
+        'Writes a fallback method without matching parameter signatures, resulting in NoSuchMethodException at runtime.'
+      ],
+      seniorDifferentiators: [
+        'Explains the difference between Semaphore Bulkhead (limits concurrent executions on current thread) and ThreadPool Bulkhead (uses an isolated thread queue).',
+        'Explains how Resilience4j events are emitted to Micrometer / Prometheus for alerting on circuit state flips.'
+      ],
+      followUpQuestions: [
+        'What is the execution order when combining @CircuitBreaker, @Retry, and @RateLimiter on the same method?'
+      ]
+    },
+    tags: ['Resilience4j', 'Circuit Breaker', 'Fault Tolerance', 'Microservices', 'Spring Boot']
   }
 ];

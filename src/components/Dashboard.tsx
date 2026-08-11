@@ -15,6 +15,7 @@ import {
   Server, 
   Layout, 
   Cloud,
+  Puzzle,
   Search,
   Sparkles,
   ArrowRight,
@@ -32,7 +33,7 @@ interface DashboardProps {
 }
 
 const ICONS: Record<string, any> = {
-  Code2, Boxes, ShieldCheck, Database, CheckCircle2, GitBranch, Layers, Server, Layout, Terminal, AlertTriangle, Cloud
+  Code2, Boxes, ShieldCheck, Database, CheckCircle2, GitBranch, Layers, Server, Layout, Terminal, AlertTriangle, Cloud, Puzzle
 };
 
 export function Dashboard({ onNavigate, onOpenSearch, bookmarkedIds = [] }: DashboardProps) {
@@ -41,7 +42,7 @@ export function Dashboard({ onNavigate, onOpenSearch, bookmarkedIds = [] }: Dash
   };
 
   const coreCategories = CATEGORIES_META.filter(c => 
-    ['java-core', 'java-17', 'spring-boot', 'microservices-security'].includes(c.id)
+    ['java-core', 'java-17', 'design-patterns', 'spring-boot', 'microservices-security'].includes(c.id)
   );
 
   const dataCloudCategories = CATEGORIES_META.filter(c => 
@@ -221,7 +222,7 @@ export function Dashboard({ onNavigate, onOpenSearch, bookmarkedIds = [] }: Dash
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           {coreCategories.map((cat) => {
             const Icon = ICONS[cat.iconName] || BookOpen;
             const count = getCategoryQuestionCount(cat.id);

@@ -11,7 +11,8 @@ export type CategoryId =
   | 'ui-frontend'
   | 'aws-cloud'
   | 'ides-diagnostics'
-  | 'production-scenarios';
+  | 'production-scenarios'
+  | 'design-patterns';
 
 export type SeniorityLevel = 'Mid-Level (4-6 YOE)' | 'Senior (10-12 YOE)' | 'Lead / Architect (13-15+ YOE)' | 'Principal / Staff';
 

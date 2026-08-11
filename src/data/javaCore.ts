@@ -1667,5 +1667,73 @@ public class AsyncDemo {
       ]
     },
     tags: ['Java 8', 'CompletableFuture', 'Concurrency', 'Async']
+  },
+  {
+    id: 'java-core-functional-interfaces',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Java 8 Constructs',
+    title: 'Functional Interfaces: Predicate, Function, Consumer, Supplier',
+    seniority: 'Junior (1-3 YOE)',
+    difficulty: 'Easy',
+    summary: 'Core understanding of the standard java.util.function interfaces introduced in Java 8 and how they map to lambda expressions.',
+    coreConcepts: [
+      'Predicate<T> takes an argument and returns a boolean (used for filtering).',
+      'Function<T, R> takes an argument and returns a result of type R (used for mapping/transforming).',
+      'Consumer<T> takes an argument and returns void (used for side-effects like printing or modifying state).',
+      'Supplier<T> takes no arguments and returns a result of type T (used for lazy generation or factory methods).'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Can accurately map each interface to its single abstract method (test, apply, accept, get).',
+        'Provides practical examples of where each is used in the Stream API (e.g., filter takes a Predicate, map takes a Function, forEach takes a Consumer).'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses Consumer and Supplier.',
+        'Cannot explain how custom functional interfaces can be created with @FunctionalInterface.'
+      ],
+      seniorDifferentiators: [
+        'Explains primitive variations (e.g., IntPredicate) to avoid autoboxing overhead.',
+        'Discusses composition methods like andThen() or compose() on Functions and Predicates.'
+      ],
+      followUpQuestions: [
+        'Why does java.util.function provide IntConsumer, DoubleFunction, etc., instead of just relying on generics?'
+      ]
+    },
+    tags: ['Java 8', 'Lambda', 'Functional Interfaces', 'Predicate', 'Function', 'Consumer', 'Supplier']
+  },
+  {
+    id: 'java-core-day-to-day-mistakes',
+    category: 'java-core',
+    categoryName: 'Java 8+ & Core Internals',
+    topic: 'Day-to-Day Pitfalls',
+    title: 'Common Developer Pitfalls: Equals/HashCode, Pass-by-Value, Autoboxing',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Testing knowledge of common traps Java developers fall into daily, including reference manipulation, wrapper class comparisons, and hashing contracts.',
+    coreConcepts: [
+      'Java is strictly Pass-by-Value. When an object is passed to a method, the reference itself is passed by value (you can mutate the object, but not reassign the caller\'s reference).',
+      'Comparing wrapper classes (e.g., Integer) using == instead of .equals() leads to insidious bugs due to Integer caching (-128 to 127).',
+      'Failing to override hashCode() when overriding equals() violates the contract, breaking HashSet and HashMap behavior.'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Clearly explains that Java is pass-by-value and illustrates what happens when an object reference is modified vs reassigned in a method.',
+        'Points out the dangers of using == on objects, especially Strings and Integers.',
+        'Explains the equals/hashCode contract.'
+      ],
+      juniorOrMidRedFlags: [
+        'Claims Java is pass-by-reference for objects.',
+        'Thinks == on Integers is safe because they act like primitives.'
+      ],
+      seniorDifferentiators: [
+        'Discusses memory leak traps, such as keeping references in static Collections without eviction or ThreadLocals in app servers.',
+        'Mentions the performance impact of hidden autoboxing/unboxing in tight loops.'
+      ],
+      followUpQuestions: [
+        'What happens if you insert an object into a HashSet, and then mutate a field that is used in its hashCode calculation?'
+      ]
+    },
+    tags: ['Core Java', 'Pitfalls', 'Pass-by-Value', 'Equals', 'HashCode', 'Autoboxing']
   }
 ];

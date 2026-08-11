@@ -17,6 +17,7 @@ import {
   Server, 
   Layout, 
   Cloud,
+  Puzzle,
   ChevronRight,
   Sparkles,
   BookmarkCheck
@@ -36,7 +37,7 @@ interface NavigationProps {
 }
 
 const CATEGORY_ICONS: Record<string, any> = {
-  Code2, Layers, Boxes, ShieldCheck, Database, CheckCircle2, GitBranch, Server, Layout, Cloud
+  Code2, Layers, Boxes, ShieldCheck, Database, CheckCircle2, GitBranch, Server, Layout, Cloud, Puzzle
 };
 
 export function Navigation({
@@ -56,7 +57,7 @@ export function Navigation({
 
   // Group categories logically
   const coreCategories = CATEGORIES_META.filter(c => 
-    ['java-core', 'java-17', 'spring-boot', 'microservices-security'].includes(c.id)
+    ['java-core', 'java-17', 'design-patterns', 'spring-boot', 'microservices-security'].includes(c.id)
   );
 
   const dataCloudCategories = CATEGORIES_META.filter(c => 

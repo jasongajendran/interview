@@ -506,5 +506,175 @@ userTable.addEventListener('click', function(event) {
       ]
     },
     tags: ['CSS', 'Flexbox', 'CSS Grid', 'Responsive Design', 'Web Vitals']
+  },
+  {
+    id: 'ui-angular-01',
+    category: 'ui-frontend',
+    categoryName: 'UI Technologies & Web Security',
+    topic: 'Angular',
+    title: 'Angular Architecture & Lifecycle Hooks',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Understanding Angular modules (NgModules), components, services, dependency injection, and component lifecycle hooks (e.g., ngOnInit, ngOnDestroy).',
+    coreConcepts: [
+      'Angular uses a component-based architecture backed by a powerful Dependency Injection (DI) system.',
+      'Lifecycle hooks allow tapping into key moments of a component: creation, rendering, data-binding changes, and destruction.',
+      'RxJS Observables are heavily used for async operations (HTTP, EventEmitters) and must be unsubscribed (often in ngOnDestroy or via AsyncPipe) to prevent memory leaks.'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains the difference between ngOnInit (after data-bound properties are initialized) and constructor (class instantiation).',
+        'Describes how the Hierarchical Dependency Injection works.',
+        'Mentions the async pipe as a best practice for managing Observable subscriptions.'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses Angular (2+) with AngularJS (1.x).',
+        'Fails to mention memory leaks caused by not unsubscribing from Observables.'
+      ],
+      seniorDifferentiators: [
+        'Discusses Change Detection strategies (Default vs OnPush) for performance optimization.',
+        'Explains standalone components introduced in modern Angular.'
+      ],
+      followUpQuestions: [
+        'How does ChangeDetectionStrategy.OnPush improve Angular application performance?'
+      ]
+    },
+    tags: ['Angular', 'TypeScript', 'RxJS', 'Lifecycle Hooks', 'Dependency Injection']
+  },
+  {
+    id: 'ui-jquery-01',
+    category: 'ui-frontend',
+    categoryName: 'UI Technologies & Web Security',
+    topic: 'jQuery',
+    title: 'jQuery vs Modern Frameworks',
+    seniority: 'Junior (1-3 YOE)',
+    difficulty: 'Easy',
+    summary: 'Understanding the historical context of jQuery, direct DOM manipulation, and why modern SPAs moved to declarative frameworks (React, Angular).',
+    coreConcepts: [
+      'jQuery normalizes cross-browser incompatibilities and simplifies direct DOM traversal and manipulation.',
+      'Modern frameworks (React, Angular, Vue) use Declarative UI and Virtual/Incremental DOM paradigms, making jQuery largely obsolete for new projects.',
+      'Mixing direct DOM manipulation (jQuery) inside a declarative framework (like React) often leads to state inconsistencies and bugs.'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Identifies jQuery as an imperative library for DOM manipulation.',
+        'Explains that modern JS (ES6+) and standard APIs (fetch, querySelector) have replaced most of jQuery\'s utility.',
+        'Understands the danger of mixing jQuery plugins with React/Angular components.'
+      ],
+      juniorOrMidRedFlags: [
+        'Recommends using jQuery for new enterprise single-page applications.',
+        'Cannot explain the difference between imperative DOM updates and declarative state-driven UIs.'
+      ],
+      seniorDifferentiators: [
+        'Explains how to safely wrap a legacy jQuery plugin inside a React useEffect or Angular component lifecycle hook if absolutely necessary.'
+      ],
+      followUpQuestions: [
+        'Why might a company still have jQuery in their enterprise stack today?'
+      ]
+    },
+    tags: ['jQuery', 'DOM', 'JavaScript', 'Frontend Architecture']
+  },
+  {
+    id: 'ui-json-01',
+    category: 'ui-frontend',
+    categoryName: 'UI Technologies & Web Security',
+    topic: 'JSON',
+    title: 'JSON Syntax, Serialization & Security',
+    seniority: 'Junior (1-3 YOE)',
+    difficulty: 'Easy',
+    summary: 'Core understanding of JSON (JavaScript Object Notation), parsing, stringification, and common pitfalls like trailing commas or cyclic references.',
+    coreConcepts: [
+      'JSON requires double quotes for strings and property names (single quotes are invalid).',
+      'JSON does not support functions, undefined, or comments natively.',
+      'JSON.stringify() fails with a TypeError when encountering circular object references.'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains the difference between a JavaScript object literal and a JSON string.',
+        'Knows about JSON.parse() and JSON.stringify().',
+        'Identifies limitations (no Date types, no comments, strictly double quotes).'
+      ],
+      juniorOrMidRedFlags: [
+        'Believes JSON supports comments or trailing commas natively.',
+        'Confuses JSON with XML or YAML.'
+      ],
+      seniorDifferentiators: [
+        'Explains JSON hijacking or how large numbers (e.g. 64-bit IDs from Twitter) can lose precision in JavaScript (requiring BigInt or string representation).',
+        'Discusses the reviver and replacer functions in JSON.parse and JSON.stringify.'
+      ],
+      followUpQuestions: [
+        'How do you handle parsing a JSON payload containing an ID like 9007199254740993 which exceeds Number.MAX_SAFE_INTEGER?'
+      ]
+    },
+    tags: ['JSON', 'Serialization', 'JavaScript', 'Data Formats']
+  },
+  {
+    id: 'ui-a11y-01',
+    category: 'ui-frontend',
+    categoryName: 'UI Technologies & Web Security',
+    topic: 'Accessibility (A11y)',
+    title: 'Web Accessibility: WCAG AA/AAA Standards & ARIA',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Evaluating knowledge of WCAG (Web Content Accessibility Guidelines) AA/AAA standards, semantic HTML, ARIA attributes, and testing tools.',
+    coreConcepts: [
+      'WCAG AA is the standard legal target for most enterprise and public applications; AAA is the highest and strictest level.',
+      'Semantic HTML (e.g., <button>, <nav>, <main>) natively provides accessibility benefits that <div> and <span> lack.',
+      'ARIA (Accessible Rich Internet Applications) attributes (e.g., aria-hidden, aria-live, aria-label) supplement HTML to communicate dynamic states to screen readers.',
+      'Color contrast ratio minimums (e.g., 4.5:1 for normal text under AA) and keyboard navigability are crucial.'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Defines what WCAG is and the difference between AA and AAA compliance.',
+        'Explains the first rule of ARIA: "No ARIA is better than bad ARIA" (use semantic HTML first).',
+        'Mentions testing tools like axe-core, Lighthouse, or VoiceOver/NVDA screen readers.'
+      ],
+      juniorOrMidRedFlags: [
+        'Treats accessibility as an afterthought or only about adding alt text to images.',
+        'Uses onClick on a <div> without tabindex or keyboard event handlers.'
+      ],
+      seniorDifferentiators: [
+        'Explains how to handle focus trapping in modal dialogs to prevent screen readers from reading background content.',
+        'Discusses aria-live regions for dynamic single-page application route changes or toast notifications.'
+      ],
+      followUpQuestions: [
+        'How would you make a custom-built dropdown component fully accessible to a keyboard and screen reader user?'
+      ]
+    },
+    tags: ['Accessibility', 'A11y', 'WCAG', 'ARIA', 'Semantic HTML']
+  },
+  {
+    id: 'ui-dos-01',
+    category: 'ui-frontend',
+    categoryName: 'UI Technologies & Web Security',
+    topic: 'Web Security (DoS)',
+    title: 'Denial of Service (DoS & DDoS) Concepts and Mitigation',
+    seniority: 'Senior (7+ YOE)',
+    difficulty: 'Hard',
+    summary: 'Understanding Denial of Service (DoS) and Distributed Denial of Service (DDoS) attacks at the application layer, and how to defend against them.',
+    coreConcepts: [
+      'DoS attempts to overwhelm a system\'s resources (CPU, Memory, Network bandwidth, Database connections) making it unavailable to legitimate users.',
+      'DDoS utilizes a distributed botnet to launch the attack from thousands of IPs.',
+      'Application Layer (Layer 7) DDoS attacks target specific expensive API endpoints (e.g., complex search queries, PDF generation, or login brute-forcing).'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Distinguishes between network/transport layer DDoS (SYN floods, UDP reflection) and application layer (Layer 7) HTTP floods.',
+        'Provides examples of mitigation: Rate Limiting, WAF (Web Application Firewall), CAPTCHAs, and CDN caching (Cloudflare).',
+        'Gives an example of an application-layer DoS (e.g., repeatedly requesting a slow database search or uploading massive files to exhaust disk/memory).'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses DoS with data breach vulnerabilities like SQL Injection or XSS.',
+        'Believes a simple application-level IF statement can stop a massive volumetric DDoS attack.'
+      ],
+      seniorDifferentiators: [
+        'Discusses asymmetric resource consumption (a small HTTP request that takes the backend 5 seconds and 1GB of RAM to process).',
+        'Mentions exponential backoff, circuit breakers, and autoscaling as architectural defenses.'
+      ],
+      followUpQuestions: [
+        'How would you implement rate limiting on a public login endpoint to prevent brute-force DoS without locking out an entire corporate office sharing a single NAT IP?'
+      ]
+    },
+    tags: ['Security', 'DoS', 'DDoS', 'Rate Limiting', 'WAF']
   }
 ];
