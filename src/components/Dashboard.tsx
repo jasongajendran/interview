@@ -113,7 +113,7 @@ export function Dashboard({ onNavigate, onOpenSearch, bookmarkedIds = [] }: Dash
             <div className="text-xs text-slate-400 font-medium">JVM Diagnostics &amp; Flags</div>
           </div>
           <div className="bg-slate-800/50 p-3.5 rounded-xl border border-slate-700/50">
-            <div className="text-2xl font-extrabold text-sky-400">18</div>
+            <div className="text-2xl font-extrabold text-sky-400">23</div>
             <div className="text-xs text-slate-400 font-medium">Visual Architecture Blueprints</div>
           </div>
         </div>
@@ -139,7 +139,7 @@ export function Dashboard({ onNavigate, onOpenSearch, bookmarkedIds = [] }: Dash
                   <BookOpen className="w-6 h-6" />
                 </div>
                 <span className="text-xs font-bold px-2.5 py-1 bg-indigo-100 text-indigo-800 rounded-full">
-                  18 Visual Diagrams
+                  23 Visual Diagrams
                 </span>
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">
