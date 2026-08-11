@@ -16,27 +16,34 @@ import {
   BookOpen,
   Sparkles,
   ArrowRight,
-  Radio
+  Radio,
+  Puzzle,
+  Rocket
 } from 'lucide-react';
+
 import { JvmVisuals } from './visuals/JvmVisuals';
 import { SpringVisuals } from './visuals/SpringVisuals';
 import { MessagingVisuals } from './visuals/MessagingVisuals';
 import { MicroservicesVisuals } from './visuals/MicroservicesVisuals';
 import { SecurityCloudVisuals } from './visuals/SecurityCloudVisuals';
+import { DesignPatternsVisuals } from './visuals/DesignPatternsVisuals';
+import { CiCdVisuals } from './visuals/CiCdVisuals';
 
-type CategoryFilter = 'all' | 'jvm' | 'spring' | 'messaging' | 'microservices' | 'security-cloud';
+type CategoryFilter = 'all' | 'jvm' | 'spring' | 'messaging' | 'microservices' | 'security-cloud' | 'design-patterns' | 'cicd';
 
 export function VisualsView() {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
-    { id: 'all', label: 'All Architecture Diagrams', icon: Layers, count: 18 },
+    { id: 'all', label: 'All Architecture Diagrams', icon: Layers, count: 23 },
     { id: 'jvm', label: 'JVM & Concurrency', icon: Cpu, count: 4 },
     { id: 'spring', label: 'Spring Boot Internals', icon: Boxes, count: 4 },
+    { id: 'design-patterns', label: 'Design Patterns', icon: Puzzle, count: 3 },
     { id: 'messaging', label: 'Kafka & RabbitMQ', icon: Radio, count: 3 },
     { id: 'microservices', label: 'Microservices & Sagas', icon: Activity, count: 3 },
     { id: 'security-cloud', label: 'Security & Cloud DevOps', icon: Shield, count: 4 },
+    { id: 'cicd', label: 'CI/CD & Config Mgmt', icon: Rocket, count: 2 },
   ];
 
   return (
@@ -132,6 +139,26 @@ export function VisualsView() {
             <SecurityCloudVisuals />
           </div>
         )}
+        {/* Design Patterns Section */}
+        {(activeCategory === 'all' || activeCategory === 'design-patterns') && (
+          <div>
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-800 bg-amber-50 border border-amber-100 px-3 py-1.5 rounded-lg w-max mb-4">
+              <Puzzle className="w-4 h-4" /> GoF Design Patterns & Architectural Principles (3 Blueprints)
+            </div>
+            <DesignPatternsVisuals />
+          </div>
+        )}
+
+        {/* CI/CD & Config Management Section */}
+        {(activeCategory === 'all' || activeCategory === 'cicd') && (
+          <div>
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-teal-800 bg-teal-50 border border-teal-100 px-3 py-1.5 rounded-lg w-max mb-4">
+              <Rocket className="w-4 h-4" /> CI/CD Pipelines & Ansible Architecture (2 Blueprints)
+            </div>
+            <CiCdVisuals />
+          </div>
+        )}
+
       </div>
     </div>
   );
