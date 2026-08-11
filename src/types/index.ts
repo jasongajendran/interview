@@ -24,11 +24,16 @@ export interface CodeExample {
   explanation?: string;
 }
 
+export interface FollowUpQuestion {
+  question: string;
+  answer: string;
+}
+
 export interface InterviewerRubric {
   idealAnswerPoints: string[];
   juniorOrMidRedFlags: string[];
   seniorDifferentiators: string[];
-  followUpQuestions: string[];
+  followUpQuestions: (string | FollowUpQuestion)[];
 }
 
 export interface QuestionItem {

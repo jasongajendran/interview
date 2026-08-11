@@ -111,5 +111,53 @@ java -Xms4g -Xmx4g \\
       'Memory and thread profilers built into IntelliJ Ultimate (Async-profiler integration).'
     ],
     interviewerTips: 'Ask candidate about their debugging methodology: how do they debug a remote production issue (JDWP agent, conditional breakpoints, stream tracing, async profiler).'
+  },
+  {
+    name: 'Glowroot (APM & Continuous Profiler)',
+    category: 'Profiler',
+    purpose: 'Low-overhead Application Performance Management (APM) and continuous profiling for production Java applications.',
+    syntaxOrCommand: `// Attach Glowroot as a Java agent on startup
+java -javaagent:glowroot.jar -jar app.jar
+
+// Access the Glowroot web UI at http://localhost:4000
+// Configuration is done via admin.json or the web UI`,
+    sampleOutput: `Transaction: /api/v1/orders/create
+Total time: 1450ms
+- JDBC Execution (850ms, 45 queries)
+  - SELECT * FROM orders WHERE ... (150ms)
+  - UPDATE inventory SET ... (700ms)
+- HTTP Client (400ms)
+  - GET https://payment-gateway.internal (400ms)`,
+    keyUseCases: [
+      'Monitoring transaction response times and identifying slow JDBC queries or external API calls.',
+      'Continuous profiling to find CPU bottlenecks in production without the high overhead of traditional profilers.',
+      'Root cause analysis of intermittent latency spikes using trace capture and historical data.'
+    ],
+    interviewerTips: 'Look for candidates who understand the difference between a high-overhead development profiler (like JProfiler) and a low-overhead production APM tool (like Glowroot or Datadog APM).'
+  },
+  {
+    name: 'JProfiler (Deep JVM Profiling)',
+    category: 'Profiler',
+    purpose: 'In-depth, interactive GUI profiling for CPU, memory, thread locking, and database analysis during development or targeted load testing.',
+    syntaxOrCommand: `// Attach JProfiler agent for remote profiling
+java -agentpath:/opt/jprofiler/bin/linux-x64/libjprofilerti.so=port=8849 -jar app.jar
+
+// Profiling modes:
+// - Sampling: Low overhead, captures stack traces periodically.
+// - Instrumentation: High overhead, injects bytecode to measure exact method execution counts and times.`,
+    sampleOutput: `CPU Views -> Call Tree:
+  100% - com.enterprise.OrderService.process() (12,500 ms)
+    85% - com.enterprise.DiscountCalculator.compute() (10,625 ms)
+      - [Monitor Blocked] (4,000 ms)
+
+Memory Views -> Heap Walker:
+  Biggest Objects:
+  - byte[] (1.2 GB) - Retained by com.enterprise.cache.LocalImageCache`,
+    keyUseCases: [
+      'Finding memory leaks using the Heap Walker to identify the "GC Root" retaining large object graphs.',
+      'Analyzing thread contention, deadlocks, and monitor blocking times.',
+      'Comparing object allocation rates and finding CPU hotspots during load testing.'
+    ],
+    interviewerTips: 'Senior developers should know when to use sampling vs instrumentation, and how to track down a memory leak by tracing an object to its Garbage Collection Root.'
   }
 ];

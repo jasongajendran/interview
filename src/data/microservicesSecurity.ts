@@ -840,6 +840,7 @@ public class OrderService {
     summary: 'Protecting microservices from cascading failures using Circuit Breakers, Retry mechanisms, and Bulkheads with Resilience4j.',
     coreConcepts: [
       'Circuit Breaker Pattern: Prevents a service from making calls to a downstream service that is likely to fail, giving the failing service time to recover.',
+      'Analogy: An electrical circuit breaker in your house. If an appliance shorts out (downstream service fails), the breaker trips (OPEN state) to prevent the whole house from catching fire (cascading failure). After a while, you test it by turning it back on (HALF_OPEN state) before resuming normal power flow (CLOSED state).',
       'States: CLOSED (normal, calls go through), OPEN (calls blocked, fail fast), HALF_OPEN (probing to see if downstream is healthy).',
       'Fallback Method: A default response provided when the circuit is open or a call fails, ensuring graceful degradation.',
       'Bulkhead Pattern: Isolates resources (thread pools/semaphores) for different downstream calls so that one slow downstream service doesn\'t exhaust the entire service\'s threads.'

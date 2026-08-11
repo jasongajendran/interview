@@ -74,7 +74,10 @@ export const designPatternsQuestions: QuestionItem[] = [
         'Explains how ClassLoaders can break singletons if multiple class loaders load the same class.'
       ],
       followUpQuestions: [
-        'How does Reflection break a standard Singleton, and how does Enum prevent this?'
+        {
+          question: 'How does Reflection break a standard Singleton, and how does Enum prevent this?',
+          answer: 'Reflection can access private constructors using setAccessible(true), allowing a second instance to be created. Enums are safe because the JVM internally prevents reflection from instantiating enum types (throws IllegalArgumentException).'
+        }
       ]
     },
     tags: ['Design Patterns', 'Singleton', 'Creational', 'Concurrency']
@@ -140,7 +143,10 @@ public class ShoppingCart {
         'Shows how to implement a Strategy factory or registry (e.g., using a Map<String, Strategy>) in Spring Boot to dynamically select strategies based on user input.'
       ],
       followUpQuestions: [
-        'How would you auto-wire all available strategies into a Map using Spring Boot?'
+        {
+          question: 'How would you auto-wire all available strategies into a Map using Spring Boot?',
+          answer: 'Spring Boot can automatically inject a Map<String, PaymentStrategy>. The map keys will be the Spring bean names (e.g., "creditCardPayment", "payPalPayment") and the values will be the strategy instances.'
+        }
       ]
     },
     tags: ['Design Patterns', 'Strategy', 'Behavioral', 'OOP', 'Clean Code']
@@ -202,7 +208,10 @@ public class TopicSubject {
         'Contrasts Observer with the Pub/Sub pattern (where an event broker/bus sits between publishers and subscribers, like Kafka or RabbitMQ).'
       ],
       followUpQuestions: [
-        'What happens if one Observer throws an exception during \`update()\` in a standard synchronous implementation?'
+        {
+          question: 'What happens if one Observer throws an exception during `update()` in a standard synchronous implementation?',
+          answer: 'The exception bubbles up to the Subject, halting the notification loop. Subsequent observers in the list will not receive the update unless the Subject wraps each notification in a try-catch block.'
+        }
       ]
     },
     tags: ['Design Patterns', 'Observer', 'Behavioral', 'Events', 'Pub/Sub']
@@ -235,7 +244,10 @@ public class TopicSubject {
         'Discusses how Dependency Injection (IoC containers) has largely replaced the need for custom Abstract Factories in enterprise applications.'
       ],
       followUpQuestions: [
-        'How does a Factory differ from the Builder pattern?'
+        {
+          question: 'How does a Factory differ from the Builder pattern?',
+          answer: 'Factory is typically used when you need to create an entire object in one step (often focusing on polymorphism and which subclass to create). Builder is used to construct a complex object step-by-step, allowing for different representations.'
+        }
       ]
     },
     tags: ['Design Patterns', 'Factory', 'Abstract Factory', 'Creational']
@@ -268,7 +280,10 @@ public class TopicSubject {
         'Contrasts Decorator with Aspect-Oriented Programming (AOP), noting that AOP (like Spring @Transactional) often uses dynamic proxies which act like decorators at runtime.'
       ],
       followUpQuestions: [
-        'What is the difference between the Decorator pattern and the Proxy pattern?'
+        {
+          question: 'What is the difference between the Decorator pattern and the Proxy pattern?',
+          answer: 'Both wrap an object. However, a Decorator adds new behavior or responsibilities to the object, whereas a Proxy controls access to the object (e.g., lazy loading, access control, or remote network access).'
+        }
       ]
     },
     tags: ['Design Patterns', 'Decorator', 'Structural', 'Composition']

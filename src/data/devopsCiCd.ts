@@ -72,6 +72,7 @@ export const devopsCiCdQuestions: QuestionItem[] = [
     summary: 'How Docker containers and Jenkins pipelines are used for Continuous Integration.',
     coreConcepts: [
       'Docker packages an application and its dependencies into a portable container image.',
+      'Analogy: Shipping containers. Before Docker, cargo (code) was loaded loosely onto ships (servers) causing conflicts (e.g., Python 2 vs 3 dependencies). Docker provides a standardized steel box where everything inside is isolated; it fits uniformly on any ship, truck, or crane worldwide.',
       'Jenkins automates the build, test, and deployment phases. A Jenkinsfile defines the pipeline as code.'
     ],
     rubric: {
@@ -458,5 +459,130 @@ git push -u origin feature-login # Push to remote`
       ]
     },
     tags: ['SVN', 'Git', 'Version Control', 'Branching']
+  },
+  {
+    id: 'gocd-01',
+    category: 'devops-cicd',
+    categoryName: 'Maven, CI/CD & Version Control',
+    topic: 'CI/CD Pipelines & GoCD',
+    title: 'GoCD Pipeline Modeling & Value Stream Map',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Medium',
+    summary: 'Understanding GoCD\'s architecture, Pipeline Dependencies, and the Value Stream Map (VSM) for continuous delivery.',
+    coreConcepts: [
+      'GoCD is specialized for complex Continuous Delivery workflows, emphasizing end-to-end visualization through its Value Stream Map (VSM).',
+      'Pipelines in GoCD are first-class citizens that can trigger other pipelines, passing artifacts downstream through Pipeline Dependencies.',
+      'A GoCD pipeline consists of Stages (run sequentially), which contain Jobs (run in parallel), which contain Tasks (run sequentially).'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains the hierarchy: Pipeline -> Stage -> Job -> Task.',
+        'Mentions the Value Stream Map and how it visualizes the path to production.',
+        'Understands artifact propagation between dependent pipelines in GoCD.'
+      ],
+      juniorOrMidRedFlags: [
+        'Confuses GoCD with Jenkins (GoCD is heavily opinionated on CD, Jenkins is a general-purpose automation server).'
+      ],
+      seniorDifferentiators: [
+        'Discusses fan-in and fan-out pipeline dependency resolution in GoCD to ensure consistent artifact versions.'
+      ],
+      followUpQuestions: [
+        {
+          question: 'How does GoCD handle "Fan-in" dependency resolution?',
+          answer: 'If Pipeline C depends on Pipeline A and Pipeline B, GoCD ensures that Pipeline C only triggers when both A and B have successfully built from the exact same upstream source commit, preventing inconsistent versions.'
+        }
+      ]
+    },
+    tags: ['GoCD', 'CI/CD', 'Value Stream Map', 'Pipeline']
+  },
+  {
+    id: 'ansible-01',
+    category: 'devops-cicd',
+    categoryName: 'Maven, CI/CD & Version Control',
+    topic: 'Configuration Management',
+    title: 'Ansible Playbooks, Idempotency & Agentless Architecture',
+    seniority: 'Senior (10-12 YOE)',
+    difficulty: 'Medium',
+    summary: 'Automating infrastructure and application deployment using Ansible Playbooks, Inventories, and Roles.',
+    coreConcepts: [
+      'Agentless Architecture: Ansible uses standard SSH (or WinRM) to connect to target nodes. It does not require a proprietary daemon installed on the servers, unlike Chef or Puppet.',
+      'Idempotency: An Ansible module should only apply a change if the current state differs from the desired state. Running the same playbook multiple times should have the same effect as running it once.',
+      'Playbooks (YAML): Define the desired state. Inventories (INI/YAML): Define the target hosts. Roles: Reusable organizational structure for tasks, variables, and templates.'
+    ],
+    codeExamples: [
+      {
+        title: 'Idempotent Ansible Task Example',
+        language: 'yaml',
+        code: `- name: Ensure Nginx is installed and running
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present  # Idempotent: Does nothing if already installed
+
+    - name: Ensure Nginx service is started
+      service:
+        name: nginx
+        state: started`
+      }
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Explains that Ansible is agentless and push-based (via SSH).',
+        'Defines Idempotency and why it is critical in configuration management.',
+        'Understands the structure of a Playbook (Tasks, Handlers, Variables).'
+      ],
+      juniorOrMidRedFlags: [
+        'Writes shell command tasks (using the `command` or `shell` module) instead of built-in idempotent modules, breaking idempotency.'
+      ],
+      seniorDifferentiators: [
+        'Discusses Ansible Vault for secret management and dynamic inventories (e.g. AWS EC2 plugin) for ephemeral cloud environments.'
+      ],
+      followUpQuestions: [
+        {
+          question: 'Why should you avoid using the `command` or `shell` module if a dedicated module (like `apt` or `copy`) exists?',
+          answer: 'The `command`/`shell` modules execute blindly every time, breaking idempotency unless manually constrained with `creates` or `removes` arguments.'
+        }
+      ]
+    },
+    tags: ['Ansible', 'Configuration Management', 'Idempotency', 'DevOps']
+  },
+  {
+    id: 'agile-01',
+    category: 'devops-cicd',
+    categoryName: 'Maven, CI/CD & Version Control',
+    topic: 'Agile & SCRUM',
+    title: 'Agile/SCRUM Ceremonies & Story Estimation',
+    seniority: 'Mid-Level (4-6 YOE)',
+    difficulty: 'Easy',
+    summary: 'The core tenets of Agile software development, SCRUM ceremonies, and effective story pointing.',
+    coreConcepts: [
+      'Core Ceremonies: Sprint Planning (what to build), Daily Standup (blockers/status), Sprint Review (demo to stakeholders), Sprint Retrospective (process improvement).',
+      'Roles: Product Owner (manages backlog/priority), Scrum Master (removes blockers/facilitates), Development Team (delivers increments).',
+      'Story Points: Relative estimation (often Fibonacci sequence 1,2,3,5,8) measuring complexity, effort, and risk—NOT exact hours.'
+    ],
+    rubric: {
+      idealAnswerPoints: [
+        'Identifies all standard SCRUM ceremonies and their distinct purposes.',
+        'Explains why story points are relative and abstract rather than time-based.',
+        'Understands that the Retrospective focuses on team process ("what went well, what can improve") while the Review focuses on the product increment.'
+      ],
+      juniorOrMidRedFlags: [
+        'Treats Daily Standup as a detailed technical problem-solving meeting instead of a quick sync/blocker identification.',
+        'Equates 1 story point directly to 1 hour or 1 day of work.'
+      ],
+      seniorDifferentiators: [
+        'Discusses tracking velocity, burn-down charts, and protecting the sprint backlog from scope creep.'
+      ],
+      followUpQuestions: [
+        {
+          question: 'What is the difference between the Definition of Done (DoD) and Acceptance Criteria?',
+          answer: 'Acceptance Criteria apply to a specific user story (e.g. "User can log in with email"). The Definition of Done applies globally to all stories (e.g. "Code reviewed, unit tests passed, deployed to staging").'
+        }
+      ]
+    },
+    tags: ['Agile', 'SCRUM', 'Project Management', 'SDLC']
   }
 ];

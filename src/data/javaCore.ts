@@ -341,6 +341,7 @@ List.of() rejected null: NullPointerException`
     coreConcepts: [
       'HashMap is not thread-safe; concurrent put operations can trigger race conditions, corrupted tree structures, or lost updates.',
       'ConcurrentHashMap in Java 8 replaced legacy Segment locks with CAS (Compare-And-Swap) for empty buckets and synchronized locks on individual bucket head nodes.',
+      'Analogy: Imagine a giant library (ConcurrentHashMap). In older maps (HashTable), you locked the entire library door, allowing only one person in at a time. With ConcurrentHashMap, you only lock the specific aisle (bucket) you are modifying, allowing hundreds of people to read and write in other aisles simultaneously.',
       'Treeification: Both HashMap and ConcurrentHashMap convert collision LinkedLists to Red-Black Trees when bucket count >= 8 (TREEIFY_THRESHOLD) and table capacity >= 64 (MIN_TREEIFY_CAPACITY).'
     ],
     detailedExplanation: [
@@ -1484,7 +1485,8 @@ public class GenericsDemo {
     coreConcepts: [
       'If two objects are equal according to the equals(Object) method, they must have the same hashCode().',
       'If two objects have the same hashCode(), they are not necessarily equal (this is a hash collision).',
-      'Breaking this contract causes objects to be lost or unretrievable when placed in hash-based collections like HashMap or HashSet.'
+      'Breaking this contract causes objects to be lost or unretrievable when placed in hash-based collections like HashMap or HashSet.',
+      'Analogy: Think of `hashCode()` as finding the correct filing cabinet drawer (bucket) based on a broad category, and `equals()` as thumbing through the folders in that drawer to find the exact document. If you change the drawer labeling (`hashCode()`) but leave the document content identical (`equals()`), you\'ll never find the document again.'
     ],
     detailedExplanation: [
       'When you insert an object as a key into a HashMap, it calculates the hashCode to find the correct bucket. Once in the bucket, it uses equals() to find the exact match.',

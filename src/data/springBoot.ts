@@ -78,6 +78,7 @@ export const springBootQuestions: QuestionItem[] = [
     summary: 'Detailed progression from BeanDefinition creation, instantiation, dependency injection, BeanPostProcessor hooks, initialization callbacks, to destruction, and changes in Spring Boot 3.',
     coreConcepts: [
       'Instantiation -> Populate Properties -> Aware Callbacks (BeanNameAware, BeanFactoryAware) -> BeanPostProcessor.postProcessBeforeInitialization -> @PostConstruct / InitializingBean.afterPropertiesSet -> custom init-method -> BeanPostProcessor.postProcessAfterInitialization (AOP proxy creation) -> Ready for Use -> @PreDestroy / DisposableBean -> custom destroy-method.',
+      'Analogy (IoC/DI): Hiring a general contractor (Spring IoC) to build a house. Instead of you manually driving to the store to fetch wood and nails (using the `new` keyword), you just provide the blueprint (constructor args/interfaces), and the contractor automatically wires up all the necessary materials for you when you need them.',
       'Circular dependency auto-resolution via three-level cache in DefaultSingletonBeanRegistry was disabled by default in Spring Boot 2.6+ / 3.x (spring.main.allow-circular-references=false) to promote cleaner decoupling.',
       'AOP Proxies (CGLIB / Dynamic Proxies) are wrapped around the bean in BeanPostProcessor.postProcessAfterInitialization.'
     ],

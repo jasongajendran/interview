@@ -594,12 +594,23 @@ function QuestionCard({
                       Interviewer Follow-up Drill-downs
                     </h4>
                     <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {question.rubric.followUpQuestions.map((pt, i) => (
-                        <li key={i} className="text-xs text-slate-700 bg-slate-100 p-2.5 rounded-lg border border-slate-200 flex items-start gap-2">
-                          <span className="font-bold text-indigo-600 font-mono">{i + 1}.</span>
-                          <span><HighlightText text={pt} searchQuery={searchQuery} /></span>
-                        </li>
-                      ))}
+                      {question.rubric.followUpQuestions.map((pt, i) => {
+                        const qText = typeof pt === 'string' ? pt : pt.question;
+                        const aText = typeof pt === 'string' ? null : pt.answer;
+                        return (
+                          <li key={i} className="text-xs text-slate-700 bg-slate-100 p-2.5 rounded-lg border border-slate-200 flex flex-col gap-2">
+                            <div className="flex items-start gap-2">
+                              <span className="font-bold text-indigo-600 font-mono shrink-0">{i + 1}.</span>
+                              <span className="font-medium text-slate-800"><HighlightText text={qText} searchQuery={searchQuery} /></span>
+                            </div>
+                            {aText && (
+                              <div className="pl-6 text-slate-600 italic border-l-2 border-indigo-200 ml-1.5 py-0.5">
+                                <HighlightText text={aText} searchQuery={searchQuery} />
+                              </div>
+                            )}
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}
