@@ -26,7 +26,7 @@ export function MessagingVisuals() {
   const [kafkaMode, setKafkaMode] = useState<'partitions' | 'idempotence' | 'rebalance'>('partitions');
   const [rabbitExchange, setRabbitExchange] = useState<'direct' | 'topic' | 'fanout' | 'dlx'>('topic');
   const [matrixFilter, setMatrixFilter] = useState<'all' | 'kafka' | 'rabbitmq'>('all');
-  const [expandedSection, setExpandedSection] = useState<string | null>('kafka-zero-copy');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const toggleSection = (id: string) => {
     setExpandedSection(prev => (prev === id ? null : id));

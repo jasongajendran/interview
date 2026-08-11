@@ -18,7 +18,7 @@ import {
 
 export function SpringVisuals() {
   const [activeTab, setActiveTab] = useState<'lifecycle' | 'aop' | 'transactional' | 'security'>('lifecycle');
-  const [expandedSection, setExpandedSection] = useState<string | null>('aop-pitfall');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const toggleSection = (id: string) => {
     setExpandedSection(prev => (prev === id ? null : id));

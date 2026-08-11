@@ -19,7 +19,7 @@ import {
 export function MicroservicesVisuals() {
   const [sagaType, setSagaType] = useState<'choreography' | 'orchestration'>('orchestration');
   const [circuitState, setCircuitState] = useState<'closed' | 'open' | 'half-open'>('closed');
-  const [expandedSection, setExpandedSection] = useState<string | null>('outbox-pattern');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const toggleSection = (id: string) => {
     setExpandedSection(prev => (prev === id ? null : id));

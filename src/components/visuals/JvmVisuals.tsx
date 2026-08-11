@@ -16,7 +16,7 @@ import {
 
 export function JvmVisuals() {
   const [activeGcTab, setActiveGcTab] = useState<'g1' | 'zgc'>('g1');
-  const [expandedSection, setExpandedSection] = useState<string | null>('jvm-memory');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const toggleSection = (id: string) => {
     setExpandedSection(prev => (prev === id ? null : id));

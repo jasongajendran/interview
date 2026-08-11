@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 export function CiCdVisuals() {
-  const [expandedSection, setExpandedSection] = useState<string | null>('jenkins-gocd');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const toggleSection = (id: string) => {
     setExpandedSection(prev => (prev === id ? null : id));

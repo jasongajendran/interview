@@ -17,7 +17,7 @@ import {
 
 export function SecurityCloudVisuals() {
   const [activeTab, setActiveTab] = useState<'oauth' | 'security-triad' | 'aws' | 'cicd'>('oauth');
-  const [expandedSection, setExpandedSection] = useState<string | null>('jwt-breakdown');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
 
   const toggleSection = (id: string) => {
     setExpandedSection(prev => (prev === id ? null : id));

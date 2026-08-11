@@ -46,7 +46,7 @@ export function CategoryView({
   const categoryMeta = CATEGORIES_META.find(c => c.id === categoryId);
   const rawQuestions = useMemo(() => allQuestions.filter(q => q.category === categoryId), [categoryId]);
 
-  const [expandedId, setExpandedId] = useState<string | null>(targetQuestionId || (rawQuestions[0]?.id ?? null));
+  const [expandedId, setExpandedId] = useState<string | null>(targetQuestionId || null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
   const [filterBookmarkedOnly, setFilterBookmarkedOnly] = useState(false);

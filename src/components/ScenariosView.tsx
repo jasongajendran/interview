@@ -22,7 +22,7 @@ interface ScenariosViewProps {
 }
 
 export function ScenariosView({ targetScenarioId }: ScenariosViewProps) {
-  const [expandedId, setExpandedId] = useState<string | null>(targetScenarioId || productionScenarios[0]?.id || null);
+  const [expandedId, setExpandedId] = useState<string | null>(targetScenarioId || null);
   const [copiedCmd, setCopiedCmd] = useState<string | null>(null);
   const [filterSeverity, setFilterSeverity] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
